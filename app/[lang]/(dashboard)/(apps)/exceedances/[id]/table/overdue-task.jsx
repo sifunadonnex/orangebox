@@ -5,7 +5,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
-import "primereact/resources/themes/saga-blue/theme.css";
+import "primereact/resources/themes/saga-orange/theme.css";
 import "primereact/resources/primereact.min.css";
 
 const OverdueTask = ({ exceedance }) => {

@@ -1,7 +1,6 @@
 'use client'
 import React from "react";
 import { Card, CardFooter } from "@/components/ui/card";
-import Link from "next/link";
 
 import ProjectHeader from "./project-header";
 import PageLink from "./page-link";

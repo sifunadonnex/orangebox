@@ -26,11 +26,11 @@ const PageLink = ({ id }) => {
   return pages.map((item) => (
     <Link
       key={item.value}
-      href={`/projects/${id}/${item.value}`}
+      href={`/exceedances/${id}/${item.value}`}
       className={cn(
         "text-sm font-semibold text-default-500 capitalize pb-3 border-b border-transparent cursor-pointer",
         {
-          "border-primary": locationName === `/projects/${id}/${item.value}`,
+          "border-primary": locationName === `/exceedances/${id}/${item.value}`,
         }
       )}
     >

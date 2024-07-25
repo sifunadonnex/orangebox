@@ -1,7 +1,6 @@
 "use client";
 import OverdueTask from "./overdue-task";
 import ProjectBudget from "./project-budget";
-import WorksNote from "./works-note";
 import {getExceedanceById} from '@/action/api-action';
 import { useQuery } from "@tanstack/react-query";
 import LayoutLoader from "@/components/layout-loader";
@@ -28,9 +27,6 @@ const Overview = ({params}) => {
               <ProjectBudget exceedance={data} />
             </div>
           </div>
-        </div>
-        <div className="col-span-12 2xl:col-span-4">
-          <WorksNote exceedance={data} />
         </div>
       </div>
     </div>

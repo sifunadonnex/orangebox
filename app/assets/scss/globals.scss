@@ -1,8 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@layer primereact
 
-@import 'primereact/resources/themes/lara-light-blue/theme.css' layer(primereact);
+@import 'primereact/resources/themes/saga-blue/theme.css' layer(primereact);
 // root css
 @layer base {
   :root {

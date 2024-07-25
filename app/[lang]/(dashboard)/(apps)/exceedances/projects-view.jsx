@@ -21,7 +21,7 @@ const ProjectsView = ({ projects }) => {
           There is no Exceedance detected from your flights. Please add a new Event Definition.
         </div>
         <div></div>
-        <Button onClick={()=>window.href='/new-event'}>
+        <Button onClick={()=>window.location.href='/new-event'}>
           <Plus className="w-4 h-4 text-primary-foreground mr-2" />
           Add Definition
         </Button>

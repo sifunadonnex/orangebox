@@ -95,7 +95,7 @@ const ProjectGrid = ({ project, onEdit }) => {
               <DropdownMenuItem className="cursor-pointer">
                 <Link
                   href={{
-                    pathname: `projects/${project?.id}`,
+                    pathname: `exceedances/${project?.id}/overview`,
                   }}
                   className="w-full"
                   target="_blank"
@@ -122,7 +122,7 @@ const ProjectGrid = ({ project, onEdit }) => {
           {/* logo, title,desc */}
           <Link
             href={{
-              pathname: `projects/${project?.id}/overview`,
+              pathname: `exceedances/${project?.id}/overview`,
             }}
           >
             <div className="flex gap-2">

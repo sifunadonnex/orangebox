@@ -20,17 +20,17 @@ const ProjectBudget = ({ exceedance }) => {
             <div className="flex flex-row justify-between">
               <span className="text-sm text-gray-500">Event Parameter</span>
               <span className="text-sm text-gray-900">
-                {exceedance.eventlog.eventParameter}
+                {exceedance?.eventlog.eventParameter}
               </span>
             </div>
             <div className="flex flex-row justify-between">
               <span className="text-sm text-gray-500">SOP</span>
               <span className="text-sm text-gray-900">
                 {" "}
-                {exceedance.eventlog.sop}{" "}
+                {exceedance?.eventlog?.sop}{" "}
               </span>
             </div>
-            {exceedance.eventlog.high && (
+            {exceedance?.eventlog?.high && (
               <>
                 <div className="flex flex-row justify-between">
                   <span className="text-sm text-gray-500">Level 1</span>
@@ -55,7 +55,7 @@ const ProjectBudget = ({ exceedance }) => {
                 </div>
               </>
             )}
-            {exceedance.eventlog.low && (
+            {exceedance?.eventlog?.low && (
               <>
                 <div className="flex flex-row justify-between">
                   <span className="text-sm text-gray-500">Level 1</span>
@@ -84,7 +84,7 @@ const ProjectBudget = ({ exceedance }) => {
             <div className="flex flex-row justify-between">
               <span className="text-sm text-primary">Event Trigger</span>
               <span className="text-sm text-primary font-bold">
-                {exceedance.eventlog.eventTrigger}
+                {exceedance?.eventlog?.eventTrigger}
               </span>
             </div>
           </div>
