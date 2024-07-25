@@ -12,7 +12,7 @@ import { Icon } from '@iconify/react';
 import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import { newFlight } from '@/action/api-action'
+import { newFlight, addExceedance } from '@/action/api-action'
 import {
   Command,
   CommandEmpty,
@@ -26,6 +26,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
+import Papa from 'papaparse'
 
 const schema = z.object({
   name: z
@@ -46,6 +47,7 @@ const VFormWithIcon = ({aircraftList}) => {
   const [value, setValue] = React.useState("");
   const [isPending, startTransition] = React.useTransition();
   const [file, setFile] = React.useState(null)
+  let events = []
   const {
     register,
     handleSubmit,
@@ -57,6 +59,77 @@ const VFormWithIcon = ({aircraftList}) => {
 
   const onFileChange = event => {
     setFile(event.target.files[0])
+  }
+
+  const analyseEvent = (csvText, idFlight, file) => {
+    // get range data
+    const data = csvText
+    const flightId = idFlight
+    const fileName = file
+
+    const processEvents = (events, data, flightId, fileName) => {
+      const processedExceedances = []
+
+      events.forEach(event => {
+        let { high, low, eventParameter, displayName, eventStatus, flightPhase, aircraftId, id } = event
+        let exceedances = []
+        const rangeData = []
+        for (const element of data) {
+          //get Sample and AIRSPEED if the phase is CR
+          if (element.Phase === flightPhase) {
+            rangeData.push([element.Sample, parseFloat(element[`${eventParameter}`])])
+          }
+        }
+
+        if (high !== undefined && high !== null && high !== '') {
+          // Loop through the data and check the values exceeding the high value
+          const aboveHigh = rangeData.filter(d => d[1] > high)
+          // Combine high exceedances with their time of occurrence
+          exceedances = exceedances.concat(aboveHigh.map(e => ({ time: e[0], value: e[1] })))
+        }
+
+        if (low !== undefined && low !== null && low !== '') {
+          // Loop through the data and check the values below the low value
+          const belowLow = rangeData.filter(d => d[1] < low)
+          // Combine low exceedances with their time of occurrence
+          exceedances = exceedances.concat(belowLow.map(e => ({ time: e[0], value: e[1] })))
+        }
+
+        if (exceedances.length > 0) {
+          processedExceedances.push({
+            exceedanceValues: JSON.stringify(exceedances),
+            flightPhase,
+            parameterName: eventParameter,
+            description: displayName,
+            eventStatus: eventStatus || 'Under Review',
+            aircraftId,
+            flightId,
+            file: fileName,
+            eventId: id
+          })
+        }
+      })
+
+      return processedExceedances
+    }
+
+    const exceedances = processEvents(events, data, flightId, fileName)
+
+    if (exceedances.length > 0) {
+      startTransition(async () => {
+        try {
+          const response = await addExceedance(exceedances)
+          if (response) {
+            toast.success("Flight analysed successfully")
+          }
+        } catch (error) {
+          toast.error("Failed to analyze Flight")
+        }
+      })
+    }
+    if (exceedances.length === 0) {
+      toast.success("No exceedances found")
+    }
   }
 
   function onSubmit(data) {
@@ -73,11 +146,19 @@ const VFormWithIcon = ({aircraftList}) => {
       try {
         const response = await newFlight(formData);
         if (response) {
-          console.log(response);
-          reset();
           toast.success("Flight added successfully");
+          events = aircraftList.find(aircraft => aircraft.id === parseInt(value)).EventLog
+          Papa.parse(file, {
+            header: true,
+            dynamicTyping: true,
+            complete: function (results) {
+              analyseEvent(results.data, response.id, response.file)
+            }
+          })
+          reset();
         }
       } catch (error) {
+        console.log(error)
         toast.error("Failed to add flight");
       }
     });
@@ -238,7 +319,7 @@ const VFormWithIcon = ({aircraftList}) => {
             {isPending ? (
               <Loader2 className="h-6 w-6 text-white" />
             ) : (
-              "Add Aircraft"
+              "Add Flight"
             )}
           </Button>
         </div>
