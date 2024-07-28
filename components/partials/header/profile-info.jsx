@@ -23,7 +23,7 @@ const ProfileInfo = () => {
     <DropdownMenu>
       <DropdownMenuTrigger asChild className=" cursor-pointer">
         <div className=" flex items-center  ">
-          {session?.user?.image && (
+          {session?.user?.image ? (
             <Image
               src={session?.user?.image}
               alt={session?.user?.name ?? ""}
@@ -31,7 +31,10 @@ const ProfileInfo = () => {
               height={36}
               className="rounded-full"
             />
-          )}
+          ):(
+            <Icon icon="bi:person-circle" className="w-7 h-7 text-primary" />
+          )
+        }
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56 p-0" align="end">
