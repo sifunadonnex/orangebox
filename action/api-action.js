@@ -1,6 +1,6 @@
 "use server";
 
-const jwtSecret = process.env.NEXTAUTH_SECRET;
+const jwtSecret = 'a6bca59a8855b4';
 
 //login
 export const login = async (data) => {
