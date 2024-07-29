@@ -6,8 +6,13 @@ import RowEditingDialog from "./row-editing-dialog";
 import { getUsers } from "@/action/api-action";
 import { useQuery } from "@tanstack/react-query";
 import LayoutLoader from "@/components/layout-loader";
+import { useUser } from "@/store";
 
 const TailwindUiTable = () => {
+  const { user } = useUser()
+  if(user.role !== "admin"){
+    window.location.href="/dashboard"
+  }
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['users'],
     queryFn: async () => await getUsers(),

@@ -122,7 +122,6 @@ const Slider = React.forwardRef(
           ref={ref}
           className={cn(sliderVariants({ color, size, radius }), className)}
           onValueChange={(newValues) => {
-            console.log(newValues);
             const roundedValue = Math.round(newValues[0]);
 
             const newMappingValue = [roundedValue];

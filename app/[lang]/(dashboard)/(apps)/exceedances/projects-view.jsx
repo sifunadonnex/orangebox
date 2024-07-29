@@ -9,7 +9,6 @@ import ProjectGrid from "./project-grid";
 import Blank from "@/components/blank";
 
 const ProjectsView = ({ projects }) => {
-  console.log(projects);
 
   if (projects.length < 1) {
     return (

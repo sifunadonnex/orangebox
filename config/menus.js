@@ -217,7 +217,7 @@ export const menusConfig = {
         {
           title: "Flights",
           icon: ChartBar,
-          href: "/charts-appex-line",
+          href: "/flights",
         },
       ],
     },
@@ -345,12 +345,13 @@ export const menusConfig = {
       },
       {
         title: "Administrative",
-        icon: Files,
         role:'admin',
+        icon: Files,
         child: [
           {
             title: "Users",
             icon: Users,
+            role:'admin',
             nested: [
               {
                 title: "User List",
@@ -365,6 +366,7 @@ export const menusConfig = {
           {
             title: "Aircrafts",
             icon: Aircraft,
+            role:'admin',
             nested: [
               {
                 title: "Aircraft List",
@@ -379,6 +381,7 @@ export const menusConfig = {
           {
             title: "Flights",
             icon: Flight,
+            role:'admin',
             nested: [
               {
                 title: "Flights List",
@@ -421,7 +424,7 @@ export const menusConfig = {
           {
             title: "Flights",
             icon: ChartBar,
-            href: "/charts-appex-line",
+            href: "/flights",
           },
         ],
       },
@@ -482,11 +485,13 @@ export const menusConfig = {
       },
       {
         isHeader:true,
-        title:"Administrative"
+        title:"Administrative",
+        role:'admin'
       },
       {
         title: "Users",
         icon: Users,
+        role:'admin',
         href: "#",
         isHide: false,
         child: [
@@ -503,6 +508,7 @@ export const menusConfig = {
       {
         title: "Aircrafts",
         icon: Aircraft,
+        role:'admin',
         child: [
           {
             title: "Aircraft List",
@@ -517,6 +523,7 @@ export const menusConfig = {
       {
         title: "Flights",
         icon: Flight,
+        role:'admin',
         child: [
           {
             title: "Flights List",
@@ -560,7 +567,7 @@ export const menusConfig = {
           {
             title: "Flights",
             icon: ChartBar,
-            href: "/charts-appex-line",
+            href: "/flights",
           },
         ],
       },

@@ -149,7 +149,6 @@ const TaskBoard = ({ boards, tasks, subTasks, comments }) => {
     })
   );
   const onDragOver = (event) => {
-    console.log("ami k");
   };
   return (
     <>

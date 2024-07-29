@@ -63,3 +63,8 @@ export const useSidebar = create(
     }
   )
 );
+
+export const useUser = create((set) => ({
+  user:{},
+  setUser:(newUser) => set({ user: newUser }),
+}));

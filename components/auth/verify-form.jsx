@@ -39,7 +39,6 @@ const VerfiyForm = () => {
   };
   const handleSubmit = () => {
     const enteredOtp = otp.join("");
-    console.log("Entered OTP:", enteredOtp);
     setOtp(otpArray);
     inputRefs.current[0].focus();
   };

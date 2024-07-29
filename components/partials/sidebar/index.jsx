@@ -7,8 +7,10 @@ import ModuleSidebar from "./module";
 import PopoverSidebar from "./popover";
 import ClassicSidebar from "./classic";
 import MobileSidebar from "./mobile-sidebar";
+import { useSession } from "next-auth/react";
 
 const Sidebar = ({ trans }) => {
+  const { data: session } = useSession();
   const { sidebarType, collapsed } = useSidebar();
   const { layout } = useThemeStore();
 
@@ -21,7 +23,7 @@ const Sidebar = ({ trans }) => {
   } else {
     const sidebarComponents = {
       module: <ModuleSidebar collapsed={collapsed} trans={trans} />,
-      popover: <PopoverSidebar collapsed={collapsed} trans={trans} />,
+      popover: <PopoverSidebar user={session?.user?.email} collapsed={collapsed} trans={trans} />,
       classic: <ClassicSidebar trans={trans} />,
     };
 

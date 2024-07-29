@@ -48,8 +48,8 @@ export const getUserById = async (id) => {
 };
 
 // Get user by email
-export const getUserByEmail = async (email) => {
-  const response = await fetchWithAuth(`https://orangebox.toolassist.co.ke/users/${email}`);
+export const getUserByEmail = async (id) => {
+  const response = await fetchWithAuth(`https://orangebox.toolassist.co.ke/user/${id}`);
   const data = await response.json();
   return data;
 };

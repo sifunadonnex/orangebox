@@ -47,7 +47,6 @@ const SheetTitleDesc = ({ task, taskId }) => {
     };
     try {
       await updateTaskAction(taskId, newData);
-      console.log("update data");
       // Additional logic after updating assign
     } catch (error) {
       console.log(error);

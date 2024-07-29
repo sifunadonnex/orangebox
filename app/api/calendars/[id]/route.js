@@ -4,7 +4,6 @@ import { calendarEvents } from "../data";
 export async function DELETE(request, response) {
   try {
     const { id } = response.params;
-    console.log(id, "ami id");
 
     const index = calendarEvents.findIndex((item) => item.id === parseInt(id));
     if (index !== -1) {

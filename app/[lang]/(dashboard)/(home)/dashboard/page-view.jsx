@@ -23,7 +23,6 @@ const DashboardPageView = ({ trans }) => {
   });
   if (isPending) console.log("loading...");
   if (isError) console.log(error);
-  if (data) console.log(data);
   return (
     <div className="space-y-6">
       <div className="flex items-center flex-wrap justify-between gap-4">

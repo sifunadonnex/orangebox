@@ -59,8 +59,6 @@ const CreateBoard = ({ open, onClose, board, boardId }) => {
         toast.success("Successfully added");
       });
     }
-
-    console.log(data, "ami board data");
     onClose();
     reset();
   };
