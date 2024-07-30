@@ -24,16 +24,16 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditingDialog from "./EditingDialog";
 import toast from "react-hot-toast";
-import { deleteUser } from '@/action/api-action'
-const RowEditingDialog = ({users}) => {
+import { deleteEvent } from '@/action/api-action'
+const RowEditingDialog = ({events}) => {
   const handleDelete = async (id) => {
     try {
-      const response = await deleteUser(id);
+      const response = await deleteEvent(id);
       if (response) {
-        toast.success("User deleted successfully");
+        toast.success("Event deleted successfully");
       }
     } catch (error) {
-      toast.error("Failed to delete user");
+      toast.error("Failed to delete Event");
     }
   }
   
@@ -41,42 +41,32 @@ const RowEditingDialog = ({users}) => {
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead className="font-semibold">User</TableHead>
-          <TableHead> Company</TableHead>
-          <TableHead>Email</TableHead>
-          <TableHead>Role</TableHead>
+          <TableHead className="font-semibold">Name</TableHead>
+          <TableHead> Parameter</TableHead>
+          <TableHead>Type</TableHead>
+          <TableHead>Phase</TableHead>
           <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {users.data.map((item) => (
-          <TableRow key={item.email}>
-            <TableCell className=" font-medium  text-card-foreground/80">
-              <div className="flexgap-3 items-center">
-                <Avatar className="rounded-full">
-                  <AvatarImage src={item.image} />
-                  <AvatarFallback>AB</AvatarFallback>
-                </Avatar>
-                <span className=" text-sm   text-card-foreground">
-                  {item.fullName}
-                </span>
-              </div>
-            </TableCell>
-
-            <TableCell>{item.company}</TableCell>
-            <TableCell>{item.email}</TableCell>
+        {events.data.map((item) => (
+          <TableRow key={item.id}>
+            <TableCell>{item.displayName}</TableCell>
+            <TableCell>{item.eventParameter}</TableCell>
+            <TableCell>{item.eventType}</TableCell>
             <TableCell>
               <Badge
                 variant="soft"
                 color={
-                  (item.role === "admin" && "default") ||
-                  (item.role === "client" && "success") ||
-                  (item.role === "owner" && "info") ||
-                  (item.role === "editor" && "warning")
+                  (item.flightPhase === "TakeOff" && "default") ||
+                  (item.flightPhase === "Climb" && "success") ||
+                  (item.flightPhase === "Cruise" && "info") ||
+                  (item.flightPhase === "Descent" && "warning") ||
+                  (item.flightPhase === "Landing" && "destructive")
                 }
                 className=" capitalize"
               >
-                {item.role}
+                {item.flightPhase}
               </Badge>
             </TableCell>
             <TableCell className="flex justify-end">

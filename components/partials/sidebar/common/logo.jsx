@@ -8,10 +8,10 @@ const SidebarLogo = ({ hovered }) => {
     <div className="px-4 py-4 ">
       <div className=" flex items-center">
         <div className="flex flex-1 items-center gap-x-3  ">
-          <SiteLogo className="text-primary h-8 w-8" />
+          <SiteLogo className="text-primary h-10 w-10" />
           {(!collapsed || hovered) && (
             <div className="flex-1  text-xl text-primary  font-semibold">
-              DashTail
+              OrangeBox
             </div>
           )}
         </div>

@@ -47,7 +47,7 @@ const MultipleTypes = ({userList}) => {
   });
 
   function onSubmit(data) {
-    data.user = parseInt(value);
+    data.user = value;
     data.aircraftMake = data.make;
     data.serialNumber = data.tailNumber; 
     startTransition(async () => {

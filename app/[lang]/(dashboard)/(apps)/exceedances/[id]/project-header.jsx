@@ -61,7 +61,7 @@ const ProjectHeader = ({ project }) => {
             <div className="h-[148px] w-[148px] rounded">
               <Image
                 src={projectImage}
-                alt="dashtail"
+                alt="orangebox"
                 className="w-full h-full object-cover rounded"
               />
             </div>

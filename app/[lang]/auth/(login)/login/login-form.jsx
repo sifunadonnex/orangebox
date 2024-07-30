@@ -14,7 +14,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { SiteLogo } from "@/components/svg";
+import SiteLogo from "@/public/images/logo/logo-black.png"
 import { useMediaQuery } from "@/hooks/use-media-query";
 
 const schema = z.object({
@@ -69,9 +69,9 @@ const LogInForm = () => {
   return (
     <div className="w-full ">
       <Link href="/dashboard" className="inline-block">
-        <SiteLogo className="h-10 w-10 2xl:w-14 2xl:h-14 text-primary" />
+      <Image src={SiteLogo} alt="site logo" width={100} height={100} className="w-24" />
       </Link>
-      <div className="2xl:mt-8 mt-6 2xl:text-3xl text-2xl font-bold text-default-900">
+      <div className="2xl:mt-2 mt-2 2xl:text-3xl text-2xl font-bold text-default-900">
         Hey, Hello 👋
       </div>
       <div className="2xl:text-lg text-base text-default-600 mt-2 leading-6">

@@ -135,7 +135,7 @@ const VFormWithIcon = ({aircraftList}) => {
   function onSubmit(data) {
     const formData = new FormData();
     formData.append('file', file); // Assuming 'file' is your file input
-    formData.append('aircraftId', parseInt(value));
+    formData.append('aircraftId', value);
     formData.append('name', data.name);
     formData.append('departure', data.departure);
     formData.append('destination', data.destination);
@@ -147,7 +147,7 @@ const VFormWithIcon = ({aircraftList}) => {
         const response = await newFlight(formData);
         if (response) {
           toast.success("Flight added successfully");
-          events = aircraftList.find(aircraft => aircraft.id === parseInt(value)).EventLog
+          events = aircraftList.find(aircraft => aircraft.id === value).EventLog
           Papa.parse(file, {
             header: true,
             dynamicTyping: true,

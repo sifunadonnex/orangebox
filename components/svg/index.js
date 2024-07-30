@@ -56,7 +56,7 @@ export { default as Stacks2 } from "./duel-tone/stacks.svg";
 export { default as Pages } from "./duel-tone/pages.svg";
 export { default as Chart } from "./duel-tone/chart.svg";
 export { default as Map } from "./duel-tone/map.svg";
-export { default as SiteLogo } from "./duel-tone/logo-png.svg";
+export { default as SiteLogo } from "./duel-tone/OrangeBoxLight.svg";
 export { default as Settings } from "./duel-tone/settings.svg";
 export { default as Files } from "./duel-tone/files.svg";
 export { default as Graph } from "./duel-tone/graph.svg";
