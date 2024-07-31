@@ -61,16 +61,16 @@ export const menusConfig = {
       title: "Application",
       icon: Application,
       child: [
-        {
-          title: "support",
-          icon: Messages,
-          href: "/chat",
-        },
-        {
-          title: "calendar",
-          icon: Calendar,
-          href: "/calendar",
-        },
+        // {
+        //   title: "support",
+        //   icon: Messages,
+        //   href: "/chat",
+        // },
+        // {
+        //   title: "calendar",
+        //   icon: Calendar,
+        //   href: "/calendar",
+        // },
       ],
     },
     {
@@ -190,27 +190,6 @@ export const menusConfig = {
       ],
     },
     {
-      title: "Tables",
-      icon: Grid,
-      child: [
-        {
-          title: "Simple Table",
-          href: "/simple-table",
-          icon: BarLeft,
-        },
-        {
-          title: "tailwindui table",
-          href: "/tailwindui-table",
-          icon: BarLeft,
-        },
-        {
-          title: "Data Table",
-          href: "/data-table",
-          icon: BarTop,
-        },
-      ],
-    },
-    {
       title: "Chart",
       icon: ChartArea,
       megaMenu: [
@@ -288,16 +267,16 @@ export const menusConfig = {
         title: "Application",
         icon: Application,
         child: [
-          {
-            title: "support",
-            icon: Messages,
-            href: "/chat",
-          },
-          {
-            title: "calendar",
-            icon: Calendar,
-            href: "/calendar",
-          },
+          // {
+          //   title: "support",
+          //   icon: Messages,
+          //   href: "/chat",
+          // },
+          // {
+          //   title: "calendar",
+          //   icon: Calendar,
+          //   href: "/calendar",
+          // },
         ],
       },
       {
@@ -395,28 +374,6 @@ export const menusConfig = {
           },
         ],
       },
-
-      {
-        title: "Tables",
-        icon: Grid,
-        child: [
-          {
-            title: "Simple Table",
-            href: "/simple-table",
-            icon: BarLeft,
-          },
-          {
-            title: "tailwindui table",
-            href: "/tailwindui-table",
-            icon: BarLeft,
-          },
-          {
-            title: "Data Table",
-            href: "/data-table",
-            icon: BarTop,
-          },
-        ],
-      },
       {
         title: "Chart",
         icon: ChartArea,
@@ -452,16 +409,16 @@ export const menusConfig = {
         isHeader: true,
         title: "Application",
       },
-      {
-        title: "support",
-        icon: Messages,
-        href: "/chat",
-      },
-      {
-        title: "calendar",
-        icon: Calendar,
-        href: "/calendar",
-      },
+      // {
+      //   title: "support",
+      //   icon: Messages,
+      //   href: "/chat",
+      // },
+      // {
+      //   title: "calendar",
+      //   icon: Calendar,
+      //   href: "/calendar",
+      // },
       {
         title: "Events",
         icon: Diamond,
@@ -538,27 +495,6 @@ export const menusConfig = {
       {
         isHeader: true,
         title: "Elements",
-      },
-      {
-        title: "Table",
-        icon: Grid,
-        child: [
-          {
-            title: "Simple Table",
-            href: "/simple-table",
-            icon: BarLeft,
-          },
-          {
-            title: "tailwindui table",
-            href: "/tailwindui-table",
-            icon: BarLeft,
-          },
-          {
-            title: "Data Table",
-            href: "/data-table",
-            icon: BarTop,
-          },
-        ],
       },
       {
         title: "Chart",

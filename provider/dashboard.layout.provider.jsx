@@ -54,7 +54,7 @@ const DashBoardLayoutProvider = ({ children, trans }) => {
           </div>
         </div>
         <Footer trans={trans} />
-        <ThemeCustomize trans={trans} />
+        {/* <ThemeCustomize trans={trans} /> */}
       </>
     );
   }
@@ -81,7 +81,7 @@ const DashBoardLayoutProvider = ({ children, trans }) => {
           </div>
         </div>
         <Footer />
-        <ThemeCustomize />
+        {/* <ThemeCustomize /> */}
       </>
     );
   }
@@ -115,7 +115,7 @@ const DashBoardLayoutProvider = ({ children, trans }) => {
           </div>
         </div>
         <Footer trans={trans} />
-        <ThemeCustomize trans={trans} />
+        {/* <ThemeCustomize trans={trans} /> */}
       </>
     );
   }
@@ -147,7 +147,7 @@ const DashBoardLayoutProvider = ({ children, trans }) => {
         </div>
       </div>
       <Footer handleOpenSearch={() => setOpen(true)} trans={trans} />
-      {isMobile && <ThemeCustomize />}
+      {/* {isMobile && <ThemeCustomize />} */}
     </>
   );
 };

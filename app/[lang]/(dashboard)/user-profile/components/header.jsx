@@ -56,10 +56,6 @@ const Header = ({user}) => {
                   link: "/user-profile"
                 },
                 {
-                  title: "Documents",
-                  link: "/user-profile/documents"
-                },
-                {
                   title: "Activity",
                   link: "/user-profile/activity"
                 },

@@ -8,27 +8,27 @@ const UsersStat = () => {
   const users = [
     {
       id: 1,
-      country: "Bangladesh",
+      country: "Cruise Overspeed",
       count: "05",
     },
     {
       id: 2,
-      country: "India",
+      country: "Long Landing",
       count: "06",
     },
     {
       id: 3,
-      country: "Pakistan",
+      country: "Short Landing",
       count: "06",
     },
     {
       id: 4,
-      country: "Australia",
+      country: "Tail Strike",
       count: "10",
     },
     {
       id: 5,
-      country: "America",
+      country: "Hard Landing",
       count: "08",
     },
   ];
@@ -37,8 +37,8 @@ const UsersStat = () => {
       <CardHeader className="border-none pb-0 mb-5">
         <div className="flex items-center gap-1">
           <div className="flex-1">
-            <div className="text-xl font-semibold text-default-900"> Users </div>
-            <span className="text-xs text-default-600 ml-1">In Last 30 Minutes</span>
+            <div className="text-xl font-semibold text-default-900"> Exceedances </div>
+            <span className="text-xs text-default-600 ml-1">In Last 30 Days</span>
           </div>
           <div className="flex-none flex items-center gap-1">
             <span className="text-4xl font-semibold text-primary">63</span>
@@ -49,7 +49,7 @@ const UsersStat = () => {
         </div>
       </CardHeader>
       <CardContent className="px-5 pb-0">
-        <p className="text-xs font-medium text-default-800">User Per Minutes</p>
+        <p className="text-xs font-medium text-default-800">Exceedances Per Day</p>
         <UsersDataChart />
         <UsersDataTable users={users} />
       </CardContent>

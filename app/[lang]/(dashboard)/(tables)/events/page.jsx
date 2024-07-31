@@ -30,7 +30,7 @@ const TailwindUiTable = () => {
           <div className="flex-none">
             <Button
               onClick={() => {
-                window.location.href = "/new-user";
+                window.location.href = "/new-event";
               }}
               type="button"
             >
