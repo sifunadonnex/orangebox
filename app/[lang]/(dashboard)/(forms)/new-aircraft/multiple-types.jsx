@@ -10,13 +10,16 @@ import { cn } from "@/lib/utils";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
 import { addAircraft } from '@/action/api-action'
+import { useMediaQuery } from "@/hooks/use-media-query";
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
+  CommandList
 } from "@/components/ui/command";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import {
   Popover,
   PopoverContent,
@@ -34,6 +37,7 @@ const schema = z.object({
 });
 
 const MultipleTypes = ({userList}) => {
+  const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [isPending, startTransition] = React.useTransition();
@@ -106,55 +110,51 @@ const MultipleTypes = ({userList}) => {
         </div>
         
         {/* select client */}
-        <div>
+        <div className="col-span-2 lg:col-span-1 flex flex-col gap-2">
     <Label htmlFor="user">User</Label> 
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          role="combobox"
-          aria-expanded={open}
-          className="w-full justify-between"
-        >
-          {value
-            ? userList.find((user) => user.id === value)
-              ?.fullName
-            : "Select User"}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
-        <Command>
-          <CommandInput placeholder="Search framework..." />
-          <CommandEmpty>No User found.</CommandEmpty>
-          <CommandGroup>
-            {userList.map((user) => (
-              <CommandItem
-                key={user.id}
-                value={user.id}
-                onSelect={(currentValue) => {
-                  currentValue === user.id
-                    ? setValue("")
-                    : setValue(user.id);
-                  setOpen(false);
-                }}
-              >
-                <Check
-                  className={cn(
-                    "mr-2 h-4 w-4",
-                    value === user.id
-                      ? "opacity-100"
-                      : "opacity-0"
+    {isDesktop ? (
+            <Popover open={open} onOpenChange={setOpen}>
+              <PopoverTrigger asChild>
+                <Button variant="outline" className=" justify-start">
+                  {value ? (
+                    <>{userList.find((user) => user.id === value)
+                      ?.fullName }</>
+                  ) : (
+                    <>Select User</>
                   )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-[200px] p-0" align="start">
+                <StatusList
+                  setOpen={setOpen}
+                  setValue={setValue}
+                  userList={userList}
                 />
-                {user.fullName}
-              </CommandItem>
-            ))}
-          </CommandGroup>
-        </Command>
-      </PopoverContent>
-    </Popover>
-
+              </PopoverContent>
+            </Popover>
+          ) : (
+            <Drawer open={open} onOpenChange={setOpen}>
+              <DrawerTrigger asChild>
+                <Button variant="outline" className="justify-start">
+                  {value ? (
+                    <>{userList.find((user) => user.id === value)
+                      ?.fullName }</>
+                  ) : (
+                    <>Select User</>
+                  )}
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <div className="mt-4 border-t">
+                  <StatusList
+                    setOpen={setOpen}
+                    setValue={setValue}
+                    userList={userList}
+                  />
+                </div>
+              </DrawerContent>
+            </Drawer>
+          )}
         </div>
       </div>
       <div className="mt-2">
@@ -171,3 +171,30 @@ const MultipleTypes = ({userList}) => {
 };
 
 export default MultipleTypes;
+
+function StatusList({ setOpen, setValue, userList }) {
+  return (
+    <Command>
+      <CommandInput placeholder="Filter Users..." />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup>
+          {userList.map((user) => (
+            <CommandItem
+              key={user.id}
+              value={user.id}
+              onSelect={(values) => {
+                setValue(
+                  userList.find((user) => user.id === values).id || null
+                );
+                setOpen(false);
+              }}
+            >
+              {user.fullName}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
