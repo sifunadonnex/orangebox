@@ -25,7 +25,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 
 
 const schema = z.object({
@@ -34,6 +34,7 @@ const schema = z.object({
     .min(3, { message: "Airline name must be at least 3 charecters." }),
   make: z.string().min(3, { message: "Make must be at least 3 charecters." }),
   tailNumber: z.string().min(3, { message: "Tail number must be at least 3 charecters." }),
+  parameters: z.string().optional(),
 });
 
 const MultipleTypes = ({userList}) => {
@@ -51,6 +52,8 @@ const MultipleTypes = ({userList}) => {
   });
 
   function onSubmit(data) {
+    //convert comma separated parameters to array
+    data.parameters = JSON.stringify(data.parameters.split(",").map((item) => item.trim()));
     data.user = value;
     data.aircraftMake = data.make;
     data.serialNumber = data.tailNumber; 
@@ -154,6 +157,19 @@ const MultipleTypes = ({userList}) => {
                 </div>
               </DrawerContent>
             </Drawer>
+          )}
+        </div>
+        {/* parameters */}
+        <div className="col-span-2">
+          <Label htmlFor="parameters">Parameters</Label>
+          <Textarea
+            id="parameters"
+            placeholder=", Separated by Comma"
+            {...register("parameters", { required: "Parameters are required" })}
+            className={cn("mt-1", { "border-red-500": errors.parameters })}
+          />
+          {errors.parameters && (
+            <p className="text-red-500 text-sm mt-1">{errors.parameters.message}</p>
           )}
         </div>
       </div>

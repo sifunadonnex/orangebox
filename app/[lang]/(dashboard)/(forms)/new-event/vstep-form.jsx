@@ -11,10 +11,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMediaQuery } from "@/hooks/use-media-query";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-const VStepForm = () => {
+const VStepForm = ({aircraftList}) => {
+  console.log(JSON.parse(aircraftList[1].parameters));
   const [activeStep, setActiveStep] = React.useState(0);
+  const [parameters, setParameters] = React.useState([]);
+  const isDesktop = useMediaQuery("(min-width: 768px)");
+  const [open, setOpen] = React.useState(false);
+  const [value, setValue] = React.useState("");
+  const [openParameter, setOpenParameter] = React.useState(false);
+  const [valueParameter, setValueParameter] = React.useState("");
+  const [isPending, startTransition] = React.useTransition();
 
   const steps = [
     {
@@ -124,7 +147,67 @@ const VStepForm = () => {
                       </p>
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="Aircraft" />
+                      {isDesktop ? (
+                        <Popover open={open} onOpenChange={setOpen}>
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className=" justify-start"
+                            >
+                              {value ? (
+                                <>
+                                  {
+                                    aircraftList.find(
+                                      (aircraft) => aircraft.id === value
+                                    )?.serialNumber
+                                  }
+                                </>
+                              ) : (
+                                <>Select Aircraft</>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-full p-0"
+                            align="start"
+                          >
+                            <StatusList
+                              setOpen={setOpen}
+                              setValue={setValue}
+                              aircraftList={aircraftList}
+                              setParameters={setParameters}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      ) : (
+                        <Drawer open={open} onOpenChange={setOpen}>
+                          <DrawerTrigger asChild>
+                            <Button variant="outline" className="justify-start">
+                              {value ? (
+                                <>
+                                  {
+                                    aircraftList.find(
+                                      (aircraft) => aircraft.id === value
+                                    )?.serialNumber
+                                  }
+                                </>
+                              ) : (
+                                <>Select Aircraft</>
+                              )}
+                            </Button>
+                          </DrawerTrigger>
+                          <DrawerContent>
+                            <div className="mt-4 border-t">
+                              <StatusList
+                                setOpen={setOpen}
+                                setValue={setValue}
+                                aircraftList={aircraftList}
+                                setParameters={setParameters}
+                              />
+                            </div>
+                          </DrawerContent>
+                        </Drawer>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
                       <Input type="text" placeholder="Event Name" />
@@ -154,21 +237,70 @@ const VStepForm = () => {
                           <SelectValue placeholder="Event Trigger" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="manual">Manual</SelectItem>
-                          <SelectItem value="auto">Auto</SelectItem>
+                          <SelectItem value=">=">{`>=`}</SelectItem>
+                          <SelectItem value="<=">{`<=`}</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Select>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Event Parameter" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="manual">Manual</SelectItem>
-                          <SelectItem value="auto">Auto</SelectItem>
-                        </SelectContent>
-                      </Select>
+                      {isDesktop ? (
+                        <Popover
+                          open={openParameter}
+                          onOpenChange={setOpenParameter}
+                        >
+                          <PopoverTrigger asChild>
+                            <Button
+                              variant="outline"
+                              className=" justify-start"
+                            >
+                              {valueParameter ? (
+                                <>
+                                  {valueParameter}
+                                </>
+                              ) : (
+                                <>Select Parameter</>
+                              )}
+                            </Button>
+                          </PopoverTrigger>
+                          <PopoverContent
+                            className="w-full p-0"
+                            align="start"
+                          >
+                            <ParameterList
+                              setOpenParameter={setOpenParameter}
+                              setValueParameter={setValueParameter}
+                              parameters={parameters}
+                            />
+                          </PopoverContent>
+                        </Popover>
+                      ) : (
+                        <Drawer
+                          open={openParameter}
+                          onOpenChange={setOpenParameter}
+                        >
+                          <DrawerTrigger asChild>
+                            <Button variant="outline" className="justify-start">
+                              {valueParameter ? (
+                                <>
+                                  {valueParameter}
+                                </>
+                              ) : (
+                                <>Select Parameter</>
+                              )}
+                            </Button>
+                          </DrawerTrigger>
+                          <DrawerContent>
+                            <div className="mt-4 border-t">
+                              <ParameterList
+                                setOpenParameter={setOpenParameter}
+                                setValueParameter={setValueParameter}
+                                parameters={parameters}
+                              />
+                            </div>
+                          </DrawerContent>
+                        </Drawer>
+                      )}
+
                     </div>
                     <div className="col-span-12 lg:col-span-6">
                       <Select>
@@ -181,7 +313,6 @@ const VStepForm = () => {
                         </SelectContent>
                       </Select>
                     </div>
-
                   </>
                 )}
                 {activeStep === 1 && (
@@ -195,7 +326,12 @@ const VStepForm = () => {
                       </p>
                     </div>
                     <div className="col-span-12">
-                      <Textarea placeholder="Description..." id="description" rows="4" required />
+                      <Textarea
+                        placeholder="Description..."
+                        id="description"
+                        rows="4"
+                        required
+                      />
                     </div>
                   </>
                 )}
@@ -211,37 +347,25 @@ const VStepForm = () => {
                       </p>
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input
-                        type="text"
-                        placeholder="SOP"
-                      />
+                      <Input type="text" placeholder="SOP" />
                     </div>
                     <div className="col-span-12 lg:col-span-6">
                       <Input type="text" placeholder="High Level 1" />
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input
-                        type="text"
-                        placeholder="High Level 2"
-                      />
+                      <Input type="text" placeholder="High Level 2" />
                     </div>
                     <div className="col-span-12 lg:col-span-6">
                       <Input type="text" placeholder="High Level 3" />
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input
-                        type="text"
-                        placeholder="Low Level 1"
-                      />
+                      <Input type="text" placeholder="Low Level 1" />
                     </div>
                     <div className="col-span-12 lg:col-span-6">
                       <Input type="text" placeholder="Low Level 2" />
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input
-                        type="text"
-                        placeholder="Low Level 3"
-                      />
+                      <Input type="text" placeholder="Low Level 3" />
                     </div>
                   </>
                 )}
@@ -297,3 +421,63 @@ const VStepForm = () => {
 };
 
 export default VStepForm;
+
+function StatusList({ setOpen, setValue, aircraftList, setParameters }) {
+  return (
+    <Command>
+      <CommandInput placeholder="Filter Aircraft..." />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup>
+          {aircraftList.map((aircraft) => (
+            <CommandItem
+              key={aircraft.id}
+              value={aircraft.id}
+              onSelect={(values) => {
+                setValue(
+                  aircraftList.find((aircraft) => aircraft.id === values).id ||
+                    null
+                );
+                setParameters(
+                  JSON.parse(aircraftList.find((aircraft) => aircraft.id === values)
+                    .parameters) || []
+                );
+                setOpen(false);
+              }}
+            >
+              {aircraft.serialNumber}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
+
+function ParameterList({ setOpenParameter, setValueParameter, parameters }) {
+  return (
+    <Command>
+      <CommandInput placeholder="Filter Aircraft..." />
+      <CommandList>
+        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandGroup>
+          {parameters.map((parameter) => (
+            <CommandItem
+              key={parameter}
+              value={parameter}
+              onSelect={(values) => {
+                setValueParameter(
+                  values.toUpperCase() ||
+                    null
+                );
+                setOpenParameter(false);
+              }}
+            >
+              {parameter}
+            </CommandItem>
+          ))}
+        </CommandGroup>
+      </CommandList>
+    </Command>
+  );
+}
