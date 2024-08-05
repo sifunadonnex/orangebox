@@ -1,4 +1,3 @@
-import { Switch } from "@/components/ui/switch";
 import {
   Table,
   TableBody,
@@ -10,27 +9,8 @@ import {
 } from "@/components/ui/table";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -43,8 +23,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import toast from "react-hot-toast";
+import EditingDialog from "./EditingDialog";
 import { deleteAircraft } from '@/action/api-action'
-const RowEditingDialog = ({aircrafts}) => {
+const RowEditingDialog = ({aircrafts, userList}) => {
   const handleDelete = async (id) => {
     try {
       const response = await deleteAircraft(id);
@@ -99,7 +80,7 @@ const RowEditingDialog = ({aircrafts}) => {
             </TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
-                <EditingDialog />
+              <EditingDialog item={item} userList= {userList?.users} />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button
@@ -145,65 +126,3 @@ const RowEditingDialog = ({aircrafts}) => {
 
 export default RowEditingDialog;
 
-const EditingDialog = () => {
-  return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <Button
-          size="icon"
-          variant="outline"
-          color="secondary"
-          className=" h-7 w-7"
-        >
-          <Icon icon="heroicons:pencil" className=" h-4 w-4  " />
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Edit User</DialogTitle>
-          <form action="#" className=" space-y-5 pt-4">
-            <div>
-              <Label className="mb-2">Name</Label>
-              <Input placeholder="Name" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Company</Label>
-              <Input placeholder="Title" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Input placeholder="Email" type="email" />
-            </div>
-            {/* end single */}
-            <div>
-              <Label className="mb-2">Email</Label>
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light">Admin</SelectItem>
-                  <SelectItem value="dark">Owner</SelectItem>
-                  <SelectItem value="system">Client</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            {/* end single */}
-            <div className="flex justify-end space-x-3">
-              <DialogClose asChild>
-                <Button type="button" variant="outline" color="destructive">
-                  Cancel
-                </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button color="success">Save</Button>
-              </DialogClose>
-            </div>
-          </form>
-        </DialogHeader>
-      </DialogContent>
-    </Dialog>
-  );
-};

@@ -29,7 +29,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 const VStepForm = ({aircraftList}) => {
-  console.log(JSON.parse(aircraftList[1].parameters));
   const [activeStep, setActiveStep] = React.useState(0);
   const [parameters, setParameters] = React.useState([]);
   const isDesktop = useMediaQuery("(min-width: 768px)");

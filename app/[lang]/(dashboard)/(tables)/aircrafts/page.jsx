@@ -3,7 +3,7 @@
 import Card from "@/components/ui/card-snippet";
 import { Button } from "@/components/ui/button";
 import RowEditingDialog from "./row-editing-dialog";
-import { getAircrafts } from "@/action/api-action";
+import { getAircrafts, getUsers } from "@/action/api-action";
 import { useQuery } from "@tanstack/react-query";
 import LayoutLoader from "@/components/layout-loader";
 const TailwindUiTable = () => {
@@ -11,9 +11,15 @@ const TailwindUiTable = () => {
     queryKey: ['aircrafts'],
     queryFn: async () => await getAircrafts(),
   });
+  const { isPending:pendingUsers, isError:errorUsers, data:users } = useQuery({
+    queryKey: ['users'],
+    queryFn: async () => await getUsers(),
+  });
 
   if (isPending) return <LayoutLoader />;
+  if (pendingUsers) return <LayoutLoader />;
   if (isError) console.log(error);
+  if (errorUsers) console.log(errorUsers);
   return (
     <div className=" space-y-6">
       <Card >
@@ -32,7 +38,7 @@ const TailwindUiTable = () => {
             </Button>
           </div>
         </div>
-        <RowEditingDialog aircrafts = {{data}} />
+        <RowEditingDialog aircrafts = {{data}} userList = {{users}} />
       </Card>
     </div>
   );
