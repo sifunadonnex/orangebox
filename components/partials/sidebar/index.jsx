@@ -19,12 +19,12 @@ const Sidebar = ({ trans }) => {
   let selectedSidebar = null;
 
   if (!isDesktop && (sidebarType === "popover" || sidebarType === "classic")) {
-    selectedSidebar = <MobileSidebar />;
+    selectedSidebar = <MobileSidebar user={session?.user?.email} />;
   } else {
     const sidebarComponents = {
-      module: <ModuleSidebar collapsed={collapsed} trans={trans} />,
+      module: <ModuleSidebar user={session?.user?.email} collapsed={collapsed} trans={trans} />,
       popover: <PopoverSidebar user={session?.user?.email} collapsed={collapsed} trans={trans} />,
-      classic: <ClassicSidebar trans={trans} />,
+      classic: <ClassicSidebar user={session?.user?.email} trans={trans} />,
     };
 
     selectedSidebar = sidebarComponents[sidebarType] || <ModuleSidebar />;

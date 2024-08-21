@@ -9,10 +9,8 @@ import LayoutLoader from "@/components/layout-loader";
 import { useUser } from "@/store";
 
 const TailwindUiTable = () => {
+  let userEvents;
   const { user } = useUser()
-  // if(user.role !== "admin"){
-  //   window.location.href="/dashboard"
-  // }
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['events'],
     queryFn: async () => await getEvents(),
@@ -20,6 +18,9 @@ const TailwindUiTable = () => {
 
   if (isPending) return <LayoutLoader />;
   if (isError) console.log(error);
+  if(user?.role !== "admin" && data && user?.aircraftIdList){
+    userEvents = data?.filter((item)=>user?.aircraftIdList.includes(item.aircraftId))
+  }
   return (
     <div className=" space-y-6">
       <Card >
@@ -38,7 +39,11 @@ const TailwindUiTable = () => {
             </Button>
           </div>
         </div>
-        <RowEditingDialog events = {{data}} />
+        {user?.role === "admin" ? (
+          <RowEditingDialog events={data} />
+        ) : (
+          <RowEditingDialog events={userEvents} />
+        )}
       </Card>
     </div>
   );

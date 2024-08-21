@@ -200,6 +200,17 @@ export const menusConfig = {
         },
       ],
     },
+    {
+      title: "Reports",
+      icon: Note,
+      megaMenu: [
+        {
+          title: "Flight Reports",
+          icon: ChartBar,
+          href: "/flight-reports",
+        },
+      ],
+    },
   ],
   sidebarNav: {
     modern: [
@@ -385,6 +396,17 @@ export const menusConfig = {
           },
         ],
       },
+      {
+        title: "Reports",
+        icon: Note,
+        child: [
+          {
+            title: "Flight Reports",
+            icon: ChartBar,
+            href: "/flight-reports",
+          },
+        ],
+      },
     ],
     classic: [
       {
@@ -504,6 +526,17 @@ export const menusConfig = {
             title: "Flights",
             icon: ChartBar,
             href: "/flights",
+          },
+        ],
+      },
+      {
+        title: "Reports",
+        icon: Note,
+        child: [
+          {
+            title: "Flight Reports",
+            icon: ChartBar,
+            href: "/flight-reports",
           },
         ],
       },

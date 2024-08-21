@@ -29,6 +29,8 @@ import {
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react";
 import Papa from "papaparse";
+import { useUser } from "@/store";
+import { Home, } from "lucide-react";
 
 const schema = z.object({
   name: z
@@ -47,6 +49,10 @@ const schema = z.object({
 });
 
 const VFormWithIcon = ({ aircraftList }) => {
+  const { user } = useUser()
+  if(user?.role !== "admin"){
+    window.location.href="/dashboard"
+  }
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -188,7 +194,9 @@ const VFormWithIcon = ({ aircraftList }) => {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
+    {user?.role === "admin" ? (
+      <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2 lg:col-span-1  flex flex-col gap-2">
           <Label htmlFor="name">Flight Name</Label>
@@ -378,6 +386,13 @@ const VFormWithIcon = ({ aircraftList }) => {
         </div>
       </div>
     </form>
+    ) : (
+      <div className="flex flex-col items-center justify-center h-full">
+        <Home size={64} color="red" />
+        <h1 className="text-xl font-bold text-red-600">You are not authorized to view this page</h1>
+      </div>
+    )}
+    </>
   );
 };
 

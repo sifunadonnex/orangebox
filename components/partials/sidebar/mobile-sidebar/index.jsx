@@ -11,7 +11,12 @@ import { usePathname } from "next/navigation";
 import SingleMenuItem from "./single-menu-item";
 import SubMenuHandler from "./sub-menu-handler";
 import NestedSubMenu from "../common/nested-menus";
-const MobileSidebar = ({ collapsed, className }) => {
+import { getUserByEmail } from "@/action/api-action";
+import { useUser } from "@/store";
+
+const MobileSidebar = ({ user, collapsed, className }) => {
+  const { setUser } = useUser()
+  const [isAdmin, setIsAdmin] = useState(false);
   const { sidebarBg, mobileMenu, setMobileMenu } = useSidebar();
   const [activeSubmenu, setActiveSubmenu] = useState(null);
   const [activeMultiMenu, setMultiMenu] = useState(null);
@@ -25,6 +30,19 @@ const MobileSidebar = ({ collapsed, className }) => {
     }
   };
 
+  const getUser = async ()=>{
+    const userData = await getUserByEmail(user)
+    //get aircraft id list from user
+    if(userData?.Aircraft){
+      const aircraftIdList = userData?.Aircraft?.map((item)=>item.id)
+      userData.aircraftIdList = aircraftIdList
+    }
+    setUser(userData)
+    if (userData?.role === "admin") {
+      setIsAdmin(true)
+    }
+  }
+
   const toggleMultiMenu = (subIndex) => {
     if (activeMultiMenu === subIndex) {
       setMultiMenu(null);
@@ -33,6 +51,10 @@ const MobileSidebar = ({ collapsed, className }) => {
     }
   };
   const locationName = usePathname();
+
+  React.useEffect(() => {
+    getUser()
+  }, [user])
 
   React.useEffect(() => {
     let subMenuIndex = null;
@@ -89,44 +111,87 @@ const MobileSidebar = ({ collapsed, className }) => {
               " space-y-2 text-center": collapsed,
             })}
           >
-            {menus.map((item, i) => (
-              <li key={`menu_key_${i}`}>
-                {/* single menu  */}
-
-                {!item.child && !item.isHeader && (
-                  <SingleMenuItem item={item} collapsed={collapsed} />
-                )}
-
-                {/* menu label */}
-                {item.isHeader && !item.child && !collapsed && (
-                  <MenuLabel item={item} />
-                )}
-
-                {/* sub menu */}
-                {item.child && (
-                  <>
-                    <SubMenuHandler
-                      item={item}
-                      toggleSubmenu={toggleSubmenu}
-                      index={i}
-                      activeSubmenu={activeSubmenu}
-                      collapsed={collapsed}
-                    />
-
-                    {!collapsed && (
-                      <NestedSubMenu
-                        toggleMultiMenu={toggleMultiMenu}
-                        activeMultiMenu={activeMultiMenu}
-                        activeSubmenu={activeSubmenu}
-                        item={item}
-                        index={i}
-                        collapsed={collapsed}
-                      />
+            {
+              isAdmin ? (
+                menus.map((item, i) => (
+                  <li key={`menu_key_${i}`}>
+                    {/* single menu  */}
+    
+                    {!item.child && !item.isHeader && (
+                      <SingleMenuItem item={item} collapsed={collapsed} />
                     )}
-                  </>
-                )}
-              </li>
-            ))}
+    
+                    {/* menu label */}
+                    {item.isHeader && !item.child && !collapsed && (
+                      <MenuLabel item={item} />
+                    )}
+    
+                    {/* sub menu */}
+                    {item.child && (
+                      <>
+                        <SubMenuHandler
+                          item={item}
+                          toggleSubmenu={toggleSubmenu}
+                          index={i}
+                          activeSubmenu={activeSubmenu}
+                          collapsed={collapsed}
+                        />
+    
+                        {!collapsed && (
+                          <NestedSubMenu
+                            toggleMultiMenu={toggleMultiMenu}
+                            activeMultiMenu={activeMultiMenu}
+                            activeSubmenu={activeSubmenu}
+                            item={item}
+                            index={i}
+                            collapsed={collapsed}
+                          />
+                        )}
+                      </>
+                    )}
+                  </li>
+                ))
+              ):(
+                menus.filter((item) => item.role !== "admin").map((item, i) => (
+                  <li key={`menu_key_${i}`}>
+                    {/* single menu  */}
+    
+                    {!item.child && !item.isHeader && (
+                      <SingleMenuItem item={item} collapsed={collapsed} />
+                    )}
+    
+                    {/* menu label */}
+                    {item.isHeader && !item.child && !collapsed && (
+                      <MenuLabel item={item} />
+                    )}
+    
+                    {/* sub menu */}
+                    {item.child && (
+                      <>
+                        <SubMenuHandler
+                          item={item}
+                          toggleSubmenu={toggleSubmenu}
+                          index={i}
+                          activeSubmenu={activeSubmenu}
+                          collapsed={collapsed}
+                        />
+    
+                        {!collapsed && (
+                          <NestedSubMenu
+                            toggleMultiMenu={toggleMultiMenu}
+                            activeMultiMenu={activeMultiMenu}
+                            activeSubmenu={activeSubmenu}
+                            item={item}
+                            index={i}
+                            collapsed={collapsed}
+                          />
+                        )}
+                      </>
+                    )}
+                  </li>
+                ))
+              )
+            }
           </ul>
         </ScrollArea>
       </div>

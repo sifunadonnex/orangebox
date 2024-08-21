@@ -44,6 +44,11 @@ const PopoverSidebar = ({ user, trans }) => {
 
   const getUser = async ()=>{
     const userData = await getUserByEmail(user)
+    //get aircraft id list from user
+    if(userData?.Aircraft){
+      const aircraftIdList = userData?.Aircraft?.map((item)=>item.id)
+      userData.aircraftIdList = aircraftIdList
+    }
     setUser(userData)
     if (userData?.role === "admin") {
       setIsAdmin(true)

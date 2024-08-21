@@ -1,9 +1,14 @@
 "use client";
 import React from "react";
 import { Stepper, Step, StepLabel } from "@/components/ui/steps";
-import { toast } from "@/components/ui/use-toast";
+import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Loader2 } from "lucide-react";
+import { addEvent } from '@/action/api-action'
 import {
   Select,
   SelectContent,
@@ -28,6 +33,21 @@ import {
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+
+const schema = z.object({
+  eventName: z.string().min(3, { message: "Event name must be at least 3 charecters." }),
+  eventCode: z.string().min(3, { message: "Event code must be at least 3 charecters." }),
+  displayName: z.string().min(3, { message: "Display name must be at least 3 charecters." }),
+  eventDescription: z.string().min(3, { message: "Event description must be at least 3 charecters." }),
+  sop: z.optional(z.string()),
+  high: z.optional(z.string()),
+  high1: z.optional(z.string()),
+  high2: z.optional(z.string()),
+  low: z.optional(z.string()),
+  low1: z.optional(z.string()),
+  low2: z.optional(z.string()),
+});
+
 const VStepForm = ({aircraftList}) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [parameters, setParameters] = React.useState([]);
@@ -37,6 +57,20 @@ const VStepForm = ({aircraftList}) => {
   const [openParameter, setOpenParameter] = React.useState(false);
   const [valueParameter, setValueParameter] = React.useState("");
   const [isPending, startTransition] = React.useTransition();
+  const [eventTrigger, setEventTrigger] = React.useState("");
+  const [eventType, setEventType] = React.useState("");
+  const [flightPhase, setFlightPhase] = React.useState("");
+  const [isHigh, setIsHigh] = React.useState(true);
+  const [isLow, setIsLow] = React.useState(true);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+  });
 
   const steps = [
     {
@@ -76,16 +110,44 @@ const VStepForm = ({aircraftList}) => {
     setActiveStep(0);
   };
 
-  const onSubmit = () => {
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <div className="mt-2 w-[340px] rounded-md bg-slate-950 p-4 top-0 right-0">
-          <p className="text-primary-foreground">Done</p>
-        </div>
-      ),
-    });
+  const handleFlightPhaseChange = (value) => {
+    setFlightPhase(value);
   };
+
+  const handleEventTriggerChange = (value) => {
+    if (value === ">=") {
+      setIsHigh(true);
+      setIsLow(false);
+    }
+    if (value === "<=") {
+      setIsLow(true);
+      setIsHigh(false);
+    }
+    setEventTrigger(value);
+  };
+
+  const handleEventTypeChange = (value) => {
+    setEventType(value);
+  };
+
+  function onSubmit(data) {
+    data.aircraftId = value;
+    data.eventParameter = valueParameter;
+    data.eventTrigger = eventTrigger;
+    data.eventType = eventType;
+    data.flightPhase = flightPhase;
+    startTransition(async () => {
+      try {
+        const response = await addEvent(data);
+        if (response) {
+          toast.success("Event added successfully");
+          handleNext();
+        }
+      } catch (error) {
+        toast.error("Failed to add event");
+      }
+    });
+  }
 
   return (
     <div className="grid grid-cols-12">
@@ -116,7 +178,7 @@ const VStepForm = ({aircraftList}) => {
         {activeStep === steps.length ? (
           <React.Fragment>
             <div className="mt-2 mb-2 font-semibold text-center">
-              All steps completed - you&apos;re finished
+              You have completed all steps for adding event definition.
             </div>
             <div className="flex pt-2">
               <div className=" flex-1" />
@@ -132,8 +194,7 @@ const VStepForm = ({aircraftList}) => {
             </div>
           </React.Fragment>
         ) : (
-          <React.Fragment>
-            <form>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <div className="grid grid-cols-12 gap-4">
                 {activeStep === 0 && (
                   <>
@@ -209,17 +270,44 @@ const VStepForm = ({aircraftList}) => {
                       )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="Event Name" />
+                      <Input
+                        id="eventName"
+                        type="text"
+                        placeholder="Event Name"
+                        {...register("eventName", { required: "Event Name is required" })}
+                        className={cn("mt-1", { "border-red-500": errors.eventName })}
+                      />
+                      {errors.airline && (
+                        <p className="text-red-500 text-sm mt-1">{errors.eventName.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="Event Code" />
+                      <Input 
+                        id="eventCode"
+                        type="text" 
+                        placeholder="Event Code" 
+                        {...register("eventCode", { required: "Event Code is required" })}
+                        className={cn("mt-1", { "border-red-500": errors.eventCode })}
+                      />
+                      {errors.eventCode && (
+                        <p className="text-red-500 text-sm mt-1">{errors.eventCode.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="Display Name" />
+                      <Input
+                        id="displayName"
+                        type="text"
+                        placeholder="displayName"
+                        {...register("displayName", { required: "Display Name is required" })}
+                        className={cn("mt-1", { "border-red-500": errors.displayName })}
+                      />
+                      {errors.displayName && (
+                        <p className="text-red-500 text-sm mt-1">{errors.displayName.message}</p>
+                      )}
                     </div>
                     {/* flight phases, event trigger, event parameter, event type */}
                     <div className="col-span-12 lg:col-span-6">
-                      <Select>
+                      <Select onValueChange={handleFlightPhaseChange}>
                         <SelectTrigger>
                           <SelectValue placeholder="Flight Phases" />
                         </SelectTrigger>
@@ -231,7 +319,7 @@ const VStepForm = ({aircraftList}) => {
                       </Select>
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Select>
+                      <Select onValueChange={handleEventTriggerChange}>
                         <SelectTrigger>
                           <SelectValue placeholder="Event Trigger" />
                         </SelectTrigger>
@@ -302,7 +390,7 @@ const VStepForm = ({aircraftList}) => {
 
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Select>
+                      <Select onValueChange={handleEventTypeChange}>
                         <SelectTrigger>
                           <SelectValue placeholder="Event Type" />
                         </SelectTrigger>
@@ -327,10 +415,12 @@ const VStepForm = ({aircraftList}) => {
                     <div className="col-span-12">
                       <Textarea
                         placeholder="Description..."
-                        id="description"
-                        rows="4"
-                        required
+                        {...register("eventDescription", { required: "Event Description is required" })}
+                        className={cn("mt-1", { "border-red-500": errors.eventDescription })}
                       />
+                      {errors.eventDescription && (
+                        <p className="text-red-500 text-sm mt-1">{errors.eventDescription.message}</p>
+                      )}
                     </div>
                   </>
                 )}
@@ -346,32 +436,99 @@ const VStepForm = ({aircraftList}) => {
                       </p>
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="SOP" />
+                      <Input
+                        id="sop"
+                        type="number"
+                        placeholder="SOP"
+                        {...register("sop", { required: "SOP is required" })}
+                        className={cn("mt-1", { "border-red-500": errors.sop })}
+                      />
+                      {errors.sop && (
+                        <p className="text-red-500 text-sm mt-1">{errors.sop.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="High Level 1" />
+                      <Input
+                        id="high"
+                        type="number"
+                        disabled={isLow}
+                        placeholder="High Level 1"
+                        {...register("high")}
+                        className={cn("mt-1", { "border-red-500": errors.high })}
+                      />
+                      {errors.high && (
+                        <p className="text-red-500 text-sm mt-1">{errors.high.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="High Level 2" />
+                      <Input
+                        id="high1"
+                        type="number"
+                        disabled={isLow}
+                        placeholder="High Level 2"
+                        {...register("high1")}
+                        className={cn("mt-1", { "border-red-500": errors.high1 })}
+                      />
+                      {errors.high1 && (
+                        <p className="text-red-500 text-sm mt-1">{errors.high1.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="High Level 3" />
+                      <Input
+                        id="high2"
+                        type="number"
+                        disabled={isLow}
+                        placeholder="High Level 3"
+                        {...register("high2")}
+                        className={cn("mt-1", { "border-red-500": errors.high2 })}
+                      />
+                      {errors.high2 && (
+                        <p className="text-red-500 text-sm mt-1">{errors.high2.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="Low Level 1" />
+                      <Input
+                        id="low"
+                        type="number"
+                        disabled={isHigh}
+                        placeholder="Low Level 1"
+                        {...register("low")}
+                        className={cn("mt-1", { "border-red-500": errors.low })}
+                      />
+                      {errors.low && (
+                        <p className="text-red-500 text-sm mt-1">{errors.low.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="Low Level 2" />
+                      <Input
+                        id="low1"
+                        type="number"
+                        disabled={isHigh}
+                        placeholder="Low Level 2"
+                        {...register("low1")}
+                        className={cn("mt-1", { "border-red-500": errors.low1 })}
+                      />
+                      {errors.low1 && (
+                        <p className="text-red-500 text-sm mt-1">{errors.low1.message}</p>
+                      )}
                     </div>
                     <div className="col-span-12 lg:col-span-6">
-                      <Input type="text" placeholder="Low Level 3" />
+                      <Input
+                        id="low2"
+                        type="number"
+                        placeholder="Low Level 3"
+                        disabled={isHigh}
+                        {...register("low2")}
+                        className={cn("mt-1", { "border-red-500": errors.low2 })}
+                      />
+                      {errors.low2 && (
+                        <p className="text-red-500 text-sm mt-1">{errors.low2.message}</p>
+                      )}
                     </div>
                   </>
                 )}
               </div>
-            </form>
-
-            <div className="flex pt-2 ">
+              <div className="flex pt-2 ">
               <Button
                 size="xs"
                 variant="outline"
@@ -390,14 +547,12 @@ const VStepForm = ({aircraftList}) => {
                   <Button
                     size="xs"
                     variant="outline"
-                    color="success"
+                    color="primary"
                     className="cursor-pointer"
-                    onClick={() => {
-                      if (onSubmit) onSubmit();
-                      handleNext();
-                    }}
+                    type="submit"
+                    disabled={isPending}
                   >
-                    Submit
+                    {isPending ? <Loader2 size="20" /> : "Add Event"}
                   </Button>
                 ) : (
                   <Button
@@ -412,7 +567,7 @@ const VStepForm = ({aircraftList}) => {
                 )}
               </div>
             </div>
-          </React.Fragment>
+            </form>
         )}
       </div>
     </div>

@@ -46,7 +46,6 @@ const WorksNote = ({ exceedance }) => {
     const myChart = echarts.init(chartDom, null, { renderer: 'svg' });
 
     const data = csvTable;
-    setSelectedParameters([Object.keys(csvTable[0])[1]])
     const colorPalette = ['#5470C6', '#91CC75', '#FAC858', '#EE6666', '#73C0DE', '#3BA272', '#FC8452', '#9A60B4', '#EA7CCC'];
 
     const yAxis = selectedParameters.length > 0   ? selectedParameters.map((param, index) => ({

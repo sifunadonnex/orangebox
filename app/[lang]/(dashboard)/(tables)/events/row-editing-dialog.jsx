@@ -1,3 +1,4 @@
+'use client'
 import {
   Table,
   TableBody,
@@ -9,7 +10,6 @@ import {
 } from "@/components/ui/table";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import {
   AlertDialog,
@@ -24,8 +24,18 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditingDialog from "./EditingDialog";
 import toast from "react-hot-toast";
-import { deleteEvent } from '@/action/api-action'
+import { deleteEvent, getAircrafts } from '@/action/api-action'
+import { useQuery } from "@tanstack/react-query";
+import LayoutLoader from "@/components/layout-loader";
+import { Plus, } from "lucide-react";
+import Blank from "@/components/blank";
+
 const RowEditingDialog = ({events}) => {
+  const { isPending, data:aircrafts } = useQuery({
+    queryKey: ['aircrafts'],
+    queryFn: async () => await getAircrafts(),
+  });
+  if (isPending) return <LayoutLoader />;
   const handleDelete = async (id) => {
     try {
       const response = await deleteEvent(id);
@@ -35,6 +45,23 @@ const RowEditingDialog = ({events}) => {
     } catch (error) {
       toast.error("Failed to delete Event");
     }
+  }
+  if (events?.length < 1) {
+    return (
+      <Blank className="max-w-[320px] mx-auto flex flex-col items-center justify-center h-full space-y-3">
+        <div className=" text-default-900 text-xl font-semibold">
+          No Events Defined
+        </div>
+        <div className=" text-sm  text-default-600 ">
+          You have not defined any event yet.
+        </div>
+        <div></div>
+        <Button onClick={()=>window.location.href='/new-event'}>
+          <Plus className="w-4 h-4 text-primary-foreground mr-2" />
+          Add Definition
+        </Button>
+      </Blank>
+    );
   }
   
   return (
@@ -49,7 +76,7 @@ const RowEditingDialog = ({events}) => {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {events.data.map((item) => (
+        {events.map((item) => (
           <TableRow key={item.id}>
             <TableCell>{item.displayName}</TableCell>
             <TableCell>{item.eventParameter}</TableCell>
@@ -71,7 +98,7 @@ const RowEditingDialog = ({events}) => {
             </TableCell>
             <TableCell className="flex justify-end">
               <div className="flex gap-3">
-                <EditingDialog item={item} />
+                <EditingDialog item={item} aircraftList={aircrafts} />
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button

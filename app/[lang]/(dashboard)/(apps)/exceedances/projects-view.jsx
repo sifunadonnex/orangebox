@@ -10,11 +10,11 @@ import Blank from "@/components/blank";
 
 const ProjectsView = ({ projects }) => {
 
-  if (projects.length < 1) {
+  if (projects?.length < 1) {
     return (
       <Blank className="max-w-[320px] mx-auto flex flex-col items-center justify-center h-full space-y-3">
         <div className=" text-default-900 text-xl font-semibold">
-          No Events Here
+          No Exceedances Detected
         </div>
         <div className=" text-sm  text-default-600 ">
           There is no Exceedance detected from your flights. Please add a new Event Definition.

@@ -26,6 +26,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { useUser } from "@/store";
+import { Home, } from "lucide-react";
 
 
 const schema = z.object({
@@ -38,6 +40,10 @@ const schema = z.object({
 });
 
 const MultipleTypes = ({userList}) => {
+  const { user } = useUser()
+  if(user?.role !== "admin"){
+    window.location.href="/dashboard"
+  }
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
@@ -70,7 +76,9 @@ const MultipleTypes = ({userList}) => {
     });
   }
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
+    {user?.role === "admin" ? (
+      <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="airline">Airline</Label>
@@ -183,6 +191,13 @@ const MultipleTypes = ({userList}) => {
           </Button>
       </div>
     </form>
+    ) : (
+      <div className="flex flex-col items-center justify-center h-full">
+        <Home size={64} color="red" />
+        <h1 className="text-xl font-bold text-red-600">You are not authorized to view this page</h1>
+      </div>
+    )}
+    </>
   );
 };
 

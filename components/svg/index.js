@@ -47,6 +47,7 @@ export { default as UserSign } from "./duel-tone/user-sign.svg";
 export { default as Web } from "./duel-tone/web.svg";
 export { default as Mail2 } from "./duel-tone/mail2.svg";
 export { default as BlankVector } from "./man-vector.svg";
+export { default as Ban } from "./ban.svg";
 export { default as DashBoard } from "./duel-tone/dashboard.svg";
 export { default as Application } from "./duel-tone/application.svg";
 export { default as Authentication } from "./duel-tone/authentication.svg";

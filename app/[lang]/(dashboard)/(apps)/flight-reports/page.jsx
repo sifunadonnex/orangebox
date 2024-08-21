@@ -1,15 +1,15 @@
 'use client'
-import ProjectsView from "./projects-view";
-import {getExceedances} from '@/action/api-action';
+import {getFlights} from '@/action/api-action';
 import { useQuery } from "@tanstack/react-query";
 import LayoutLoader from "@/components/layout-loader";
 import { useUser } from "@/store";
+import FlightReport from "./FlightReport";
 export default function ProjectPage({ params }) {  
-  let userExceedances;
+  let userFlights;
   const { user } = useUser()
   const { isPending, isError, data, error } = useQuery({
-    queryKey: ['exceedances'],
-    queryFn: async () => await getExceedances(),
+    queryKey: ['flights'],
+    queryFn: async () => await getFlights(),
   });
   if (isPending) return <LayoutLoader />;
   if (isError) {
@@ -17,15 +17,15 @@ export default function ProjectPage({ params }) {
   }
   const projects = data;
   if(user?.role !== "admin" && data && user?.aircraftIdList){
-    userExceedances = data?.filter((item)=>user?.aircraftIdList.includes(item.aircraftId))
+    userFlights = data?.filter((item)=>user?.aircraftIdList.includes(item.aircraftId))
   }
 
   return (
     <div>
       {user?.role === "admin" ? (
-        <ProjectsView projects={projects} />
+        <FlightReport flights={projects} />
       ) : (
-        <ProjectsView projects={userExceedances} />
+        <FlightReport flights={userFlights} />
       ) }
     </div>
   );

@@ -150,7 +150,7 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName;
 
 const SelectContent = React.forwardRef(
   ({ className, children, position = "popper", ...props }, ref) => (
-    <SelectPrimitive.Portal>
+    // <SelectPrimitive.Portal>
       <SelectPrimitive.Content
         ref={ref}
         className={cn(
@@ -172,7 +172,7 @@ const SelectContent = React.forwardRef(
           {children}
         </SelectPrimitive.Viewport>
       </SelectPrimitive.Content>
-    </SelectPrimitive.Portal>
+    // </SelectPrimitive.Portal>
   )
 );
 SelectContent.displayName = SelectPrimitive.Content.displayName;

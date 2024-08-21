@@ -10,19 +10,25 @@ import DashboardSelect from "@/components/dasboard-select";
 import TopTen from "./components/top-ten";
 import TopPage from "./components/top-page";
 import DatePickerWithRange from "@/components/date-picker-with-range";
-import {getExceedances} from '@/action/api-action';
+import {getAircrafts} from '@/action/api-action';
 import { useQuery } from "@tanstack/react-query";
+import { useUser } from "@/store";
 //import { useSession } from "next-auth/react";
 
 
 const DashboardPageView = ({ trans }) => {
+  let userAircrafts;
+  const { user } = useUser()
   //const { data: session } = useSession();
   const { isPending, isError, data, error } = useQuery({
     queryKey: ['exceedances'],
-    queryFn: async () => await getExceedances(),
+    queryFn: async () => await getAircrafts(),
   });
   if (isPending) console.log("loading...");
   if (isError) console.log(error);
+  if(user?.role !== "admin" && data && user?.aircraftIdList){
+    userAircrafts = data?.filter((item)=>user?.aircraftIdList.includes(item.id))
+  }
   return (
     <div className="space-y-6">
       <div className="flex items-center flex-wrap justify-between gap-4">
@@ -34,7 +40,11 @@ const DashboardPageView = ({ trans }) => {
       {/* reports area */}
       <div className="grid grid-cols-12  gap-6 ">
         <div className="col-span-12 lg:col-span-8">
-          <ReportsSnapshot />
+          {user?.role === "admin" ? (
+            <ReportsSnapshot aircrafts = {data} />
+          ) : (
+            <ReportsSnapshot aircrafts = {userAircrafts} />
+          )}
         </div>
         <div className="col-span-12 lg:col-span-4">
           <UsersStat />

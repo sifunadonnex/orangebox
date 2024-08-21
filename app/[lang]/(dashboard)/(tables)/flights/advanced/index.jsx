@@ -115,7 +115,7 @@ const Aircraft = ({data}) => {
     <div className='card'>
       {!isChartVisible && (
         <DataTable
-          value={data.data}
+          value={data}
           expandedRows={expandedRows}
           onRowToggle={e => setExpandedRows(e.data)}
           rowExpansionTemplate={rowExpansionTemplate}

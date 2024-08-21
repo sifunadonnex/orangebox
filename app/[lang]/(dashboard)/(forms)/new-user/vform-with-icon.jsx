@@ -26,6 +26,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Check, ChevronsUpDown } from "lucide-react";
+import { useUser } from "@/store";
+import { Home, } from "lucide-react";
 
 const schema = z.object({
   fullName: z.string().nonempty(),
@@ -37,6 +39,10 @@ const schema = z.object({
 });
 
 const VFormWithIcon = () => {
+  const { user } = useUser()
+  if(user?.role !== "admin"){
+    window.location.href="/dashboard"
+  }
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
   const [isPending, startTransition] = React.useTransition();
@@ -68,7 +74,9 @@ const VFormWithIcon = () => {
     });
   };
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <>
+    {user?.role === "admin" ? (
+      <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2 lg:col-span-1">
           <Label htmlFor="fullName">Full Name</Label>
@@ -244,6 +252,13 @@ const VFormWithIcon = () => {
         </div>
       </div>
     </form>
+    ) : (
+      <div className="flex flex-col items-center justify-center h-full">
+        <Home size={64} color="red" />
+        <h1 className="text-xl font-bold text-red-600">You are not authorized to view this page</h1>
+      </div>
+    )}
+    </>
   );
 };
 
