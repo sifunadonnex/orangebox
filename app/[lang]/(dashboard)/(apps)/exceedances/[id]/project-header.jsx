@@ -5,6 +5,7 @@ import { Icon } from "@iconify/react";
 import projectImage from "@/public/images/auth/mountain.png";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useUser } from "@/store";
 
 import {
   DropdownMenu,
@@ -15,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 const ProjectHeader = ({ project }) => {
+  const { user } = useUser()
   const data = [
     {
       text: "flight date",
@@ -39,7 +41,7 @@ const ProjectHeader = ({ project }) => {
         <CardTitle className="flex-1"> Exceedance Details </CardTitle>
         <div className="flex-none flex items-center gap-3">
           {/* elipsis */}
-          <DropdownMenu>
+          {user?.role === 'admin' || user?.role === 'gatekeeper' && <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" color="secondary">
                 <Icon
@@ -52,7 +54,7 @@ const ProjectHeader = ({ project }) => {
               <DropdownMenuItem>Update Status</DropdownMenuItem>
               <DropdownMenuItem>Delete</DropdownMenuItem>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu>}
         </div>
       </CardHeader>
       <CardContent className="border-b border-default-200">

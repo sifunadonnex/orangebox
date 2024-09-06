@@ -26,12 +26,31 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { Plus } from "lucide-react";
+import Blank from "@/components/blank";
 
 const schema = z.object({
   comment: z.string().nonempty("Comment is required"),
 });
 
-const MultipleTypes = ({ exceedance, id }) => {
+const MultipleTypes = ({ exceedance, id, role }) => {
+  if (role === 'client'){
+    return(
+      <Blank className="max-w-[320px] mx-auto flex flex-col items-center justify-center h-full space-y-3">
+        <div className=" text-default-900 text-xl font-semibold">
+          Permision Required!
+        </div>
+        <div className=" text-sm  text-default-600 ">
+        You have no permission to edit this exceedance, Please contact your Gate Keeper
+        </div>
+        <div></div>
+        <Button onClick={() => (window.location.href = "/")}>
+          <Plus className="w-4 h-4 text-primary-foreground mr-2" />
+          Back to Dashboard
+        </Button>
+      </Blank>
+    )
+  }
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState(exceedance?.eventStatus);
