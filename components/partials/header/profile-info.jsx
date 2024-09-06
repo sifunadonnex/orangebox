@@ -75,7 +75,7 @@ const ProfileInfo = () => {
             {
               name: "Settings",
               icon: "heroicons:paper-airplane",
-              href:"/dashboard"
+              href:"/user-profile/settings"
             },
           ].map((item, index) => (
             <Link
@@ -102,9 +102,6 @@ const ProfileInfo = () => {
                 {[
                   {
                     name: "portal",
-                  },
-                  {
-                    name: "slack",
                   },
                   {
                     name: "whatsapp",

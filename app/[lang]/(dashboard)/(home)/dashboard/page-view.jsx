@@ -26,7 +26,10 @@ const DashboardPageView = ({ trans }) => {
   });
   if (isPending) console.log("loading...");
   if (isError) console.log(error);
-  if(user?.role !== "admin" && data && user?.aircraftIdList){
+  if(user?.role === "gatekeeper" && data && user?.aircraftIdList){
+    userAircrafts = data?.filter((item)=>user?.aircraftIdList.includes(item.id))
+  }
+  if(user?.role === "client" && data && user?.aircraftIdList){
     userAircrafts = data?.filter((item)=>user?.aircraftIdList.includes(item.id))
   }
   return (

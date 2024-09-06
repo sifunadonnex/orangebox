@@ -17,7 +17,7 @@ import {
 const ProjectHeader = ({ project }) => {
   const data = [
     {
-      text: "detection date",
+      text: "flight date",
       date: new Date(project?.createdAt).toLocaleDateString(),
     },
     {
@@ -73,7 +73,17 @@ const ProjectHeader = ({ project }) => {
                 {project?.description}{" "}
               </div>
               <div className="space-x-3 rtl:space-x-reverse ">
-                <Badge color="warning" variant="soft">
+                <Badge color={
+                project?.eventStatus === "Under Review"
+                  ? "warning"
+                  : project?.eventStatus === "Valid"
+                  ? "success"
+                  : project?.eventStatus === "Nuisance"
+                  ? "default"
+                  : project?.eventStatus === "False"
+                  ? "danger"
+                  : "default"
+              } variant="soft">
                   {" "}
                   {project.eventStatus}{" "}
                 </Badge>

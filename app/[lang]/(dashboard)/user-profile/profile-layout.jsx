@@ -4,8 +4,6 @@ import { usePathname } from "next/navigation";
 import Header from "./components/header";
 import SettingsHeader from "./components/settings-header"
 import { useSession } from "next-auth/react"
-import { getUserByEmail } from '@/action/api-action';
-import { useQuery } from "@tanstack/react-query";
 import LayoutLoader from "@/components/layout-loader";
 const ProfileLayout = ({ children }) => {
   const location = usePathname();

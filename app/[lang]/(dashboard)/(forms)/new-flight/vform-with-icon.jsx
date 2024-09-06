@@ -80,11 +80,16 @@ const VFormWithIcon = ({ aircraftList }) => {
 
     const processEvents = (events, data, flightId, fileName) => {
       const processedExceedances = [];
+      let exceedanceLevel;
 
       events.forEach((event) => {
         let {
           high,
+          high1,
+          high2,
           low,
+          low1,
+          low2,
           eventParameter,
           displayName,
           eventStatus,
@@ -105,12 +110,31 @@ const VFormWithIcon = ({ aircraftList }) => {
         }
 
         if (high !== undefined && high !== null && high !== "") {
-          // Loop through the data and check the values exceeding the high value
+          // Loop through the data and check the values exceeding the high value and set the exceedance level
           const aboveHigh = rangeData.filter((d) => d[1] > high);
+          if (aboveHigh.length > 0) {
+            exceedanceLevel = "Level 1";
+          }
           // Combine high exceedances with their time of occurrence
           exceedances = exceedances.concat(
             aboveHigh.map((e) => ({ time: e[0], value: e[1] }))
           );
+        }
+
+        if (high1 !== undefined && high1 !== null && high1 !== "") {
+          // Loop through the data and check the values exceeding the high1 value and set the exceedance level
+          const aboveHigh1 = rangeData.filter((d) => d[1] > high1);
+          if (aboveHigh1.length > 0) {
+            exceedanceLevel = "Level 2";
+          }
+        }
+
+        if (high2 !== undefined && high2 !== null && high2 !== "") {
+          // Loop through the data and check the values exceeding the high2 value and set the exceedance level
+          const aboveHigh2 = rangeData.filter((d) => d[1] > high2);
+          if (aboveHigh2.length > 0) {
+            exceedanceLevel = "Level 3";
+          }
         }
 
         if (low !== undefined && low !== null && low !== "") {
@@ -120,6 +144,22 @@ const VFormWithIcon = ({ aircraftList }) => {
           exceedances = exceedances.concat(
             belowLow.map((e) => ({ time: e[0], value: e[1] }))
           );
+        }
+
+        if (low1 !== undefined && low1 !== null && low1 !== "") {
+          // Loop through the data and check the values below the low1 value
+          const belowLow1 = rangeData.filter((d) => d[1] < low1);
+          if (belowLow1.length > 0) {
+            exceedanceLevel = "Level 2";
+          }
+        }
+
+        if (low2 !== undefined && low2 !== null && low2 !== "") {
+          // Loop through the data and check the values below the low2 value
+          const belowLow2 = rangeData.filter((d) => d[1] < low2);
+          if (belowLow2.length > 0) {
+            exceedanceLevel = "Level 3";
+          }
         }
 
         if (exceedances.length > 0) {
@@ -133,6 +173,7 @@ const VFormWithIcon = ({ aircraftList }) => {
             flightId,
             file: fileName,
             eventId: id,
+            exceedanceLevel,
           });
         }
       });

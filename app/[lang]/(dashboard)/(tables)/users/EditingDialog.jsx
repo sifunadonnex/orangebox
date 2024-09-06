@@ -54,6 +54,7 @@ const EditingDialog = ({item}) => {
     },
   });
   const onSubmit = (data) => {
+    data.updateLevel = "admin";
     startTransition(async () => {
       try {
         const response = await updateUser(item.id, data);

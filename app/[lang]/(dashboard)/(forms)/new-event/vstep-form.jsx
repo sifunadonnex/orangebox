@@ -315,6 +315,8 @@ const VStepForm = ({aircraftList}) => {
                           <SelectItem value="takeoff">Takeoff</SelectItem>
                           <SelectItem value="cruise">Cruise</SelectItem>
                           <SelectItem value="landing">Landing</SelectItem>
+                          <SelectItem value="climb">Climb</SelectItem>
+                          <SelectItem value="descent">Descent</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -395,8 +397,9 @@ const VStepForm = ({aircraftList}) => {
                           <SelectValue placeholder="Event Type" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="manual">Manual</SelectItem>
-                          <SelectItem value="auto">Auto</SelectItem>
+                          <SelectItem value="fuel">Fuel</SelectItem>
+                          <SelectItem value="mantainance">Mantainance</SelectItem>
+                          <SelectItem value="safety">Safety</SelectItem>
                         </SelectContent>
                       </Select>
                     </div>

@@ -4,47 +4,28 @@ import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { InputGroup, InputGroupText } from "@/components/ui/input-group";
 import { Icon } from "@iconify/react";
-import { addUser } from "@/action/api-action";
+import { updateUser } from "@/action/api-action";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import toast from "react-hot-toast";
 import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useUser } from "@/store";
-import { Home, } from "lucide-react";
 
 const schema = z.object({
   fullName: z.string().nonempty(),
   username: z.string().nonempty(),
   email: z.string().email(),
-  password: z.string().min(6),
   phone: z.string().min(10),
   company: z.string().nonempty(),
+  department: z.string().nonempty(),
+  designation: z.string().nonempty(),
+  password: z.string().nonempty(),
 });
 
-const VFormWithIcon = () => {
-  const { user } = useUser()
-  if(user?.role !== "admin"){
-    window.location.href="/dashboard"
-  }
-  const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+const ManageUsers = ({user}) => {
   const [isPending, startTransition] = React.useTransition();
   const {
     register,
@@ -54,33 +35,31 @@ const VFormWithIcon = () => {
   } = useForm({
     resolver: zodResolver(schema),
     mode: "all",
+    defaultValues: {
+      company: user.company,
+  },
   });
-  const roles = [
-    { value: "admin", label: "Admin" },
-    { value: "gatekeeper", label: "Gatekeeper" },
-    { value: "user", label: "User" },
-  ];
   const onSubmit = (data) => {
-    data.role = value;
+    data.gateId = user.id;
     startTransition(async () => {
       try {
-        const response = await addUser(data);
+        const response = await updateUser(uaer.id, data);
         if (response) {
-          toast.success("User added successfully");
+          toast.success("User Details Added successfully");
           reset();
         }
       } catch (error) {
-        toast.error("Failed to add user");
+        toast.error("Failed to Add User Details");
       }
     });
   };
   return (
-    <>
-    {user?.role === "admin" ? (
-      <form onSubmit={handleSubmit(onSubmit)}>
+    <Card className="rounded-t-none pt-6">
+      <CardContent>
+    <form onSubmit={handleSubmit(onSubmit)}>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2 lg:col-span-1">
-          <Label htmlFor="fullName">Full Name</Label>
+          <Label htmlFor="fullName" className="mb-2">Full Name</Label>
           <InputGroup>
             <Input
               type="text"
@@ -97,7 +76,7 @@ const VFormWithIcon = () => {
           )}
         </div>
         <div className="col-span-2 lg:col-span-1">
-          <Label htmlFor="username">Username</Label>
+          <Label htmlFor="username" className="mb-2">Username</Label>
           <InputGroup>
             <Input
               type="text"
@@ -114,7 +93,7 @@ const VFormWithIcon = () => {
           )}
         </div>
         <div className="col-span-2 lg:col-span-1">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email" className="mb-2">Email</Label>
           <InputGroup>
             <Input
               type="email"
@@ -131,24 +110,7 @@ const VFormWithIcon = () => {
           )}
         </div>
         <div className="col-span-2 lg:col-span-1">
-          <Label htmlFor="password">Password</Label>
-          <InputGroup>
-            <Input
-              type="password"
-              id="password"
-              placeholder="Password"
-              {...register("password")}
-            />
-            <InputGroupText>
-              <Icon icon="bi:lock-fill" />
-            </InputGroupText>
-          </InputGroup>
-          {errors.password && (
-            <span className="text-red-500 text-sm">Password is required</span>
-          )}
-        </div>
-        <div className="col-span-2 lg:col-span-1">
-          <Label htmlFor="phone">Phone</Label>
+          <Label htmlFor="phone" className="mb-2">Phone</Label>
           <InputGroup>
             <Input
               type="text"
@@ -165,51 +127,7 @@ const VFormWithIcon = () => {
           )}
         </div>
         <div className="col-span-2 lg:col-span-1">
-          <Label htmlFor="role">Role</Label>
-          <Popover open={open} onOpenChange={setOpen}>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                role="combobox"
-                aria-expanded={open}
-                className="w-full justify-between"
-              >
-                {value
-                  ? roles.find((role) => role.value === value)?.label
-                  : "Select Role"}
-                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-full p-0">
-              <Command>
-                <CommandInput placeholder="Search framework..." />
-                <CommandEmpty>No Role found.</CommandEmpty>
-                <CommandGroup>
-                  {roles.map((role) => (
-                    <CommandItem
-                      key={role.value}
-                      value={role.value}
-                      onSelect={(currentValue) => {
-                        setValue(currentValue === value ? "" : currentValue);
-                        setOpen(false);
-                      }}
-                    >
-                      <Check
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          value === role.value ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                      {role.label}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </Command>
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div className="col-span-2 lg:col-span-1">
-          <Label htmlFor="company">Company</Label>
+          <Label htmlFor="company" className="mb-2">Company</Label>
           <InputGroup>
             <Input
               type="text"
@@ -223,6 +141,57 @@ const VFormWithIcon = () => {
           </InputGroup>
           {errors.company && (
             <span className="text-red-500 text-sm">Company is required</span>
+          )}
+        </div>
+        <div className="col-span-2 lg:col-span-1">
+          <Label htmlFor="department" className="mb-2">Department</Label>
+          <InputGroup>
+            <Input
+              type="text"
+              id="department"
+              placeholder="Department"
+              {...register("department")}
+            />
+            <InputGroupText>
+              <Icon icon="bi:people-fill" />
+            </InputGroupText>
+          </InputGroup>
+          {errors.department && (
+            <span className="text-red-500 text-sm">Department is required</span>
+          )}
+        </div>
+        <div className="col-span-2 lg:col-span-1">
+          <Label htmlFor="designation" className="mb-2">Designation</Label>
+          <InputGroup>
+            <Input
+              type="text"
+              id="designation"
+              placeholder="Designation"
+              {...register("designation")}
+            />
+            <InputGroupText>
+              <Icon icon="bi:badge-cc-fill" />
+            </InputGroupText>
+          </InputGroup>
+          {errors.designation && (
+            <span className="text-red-500 text-sm">Designation is required</span>
+          )}
+        </div>
+        <div className="col-span-2 lg:col-span-1">
+          <Label htmlFor="password" className="mb-2">Password</Label>
+          <InputGroup>
+            <Input
+              type="password"
+              id="password"
+              placeholder="Password"
+              {...register("password")}
+            />
+            <InputGroupText>
+              <Icon icon="bi:lock-fill" />
+            </InputGroupText>
+          </InputGroup>
+          {errors.password && (
+            <span className="text-red-500 text-sm">Password is required</span>
           )}
         </div>
         {/* accept terms */}
@@ -253,14 +222,9 @@ const VFormWithIcon = () => {
         </div>
       </div>
     </form>
-    ) : (
-      <div className="flex flex-col items-center justify-center h-full">
-        <Home size={64} color="red" />
-        <h1 className="text-xl font-bold text-red-600">You are not authorized to view this page</h1>
-      </div>
-    )}
-    </>
+    </CardContent>
+    </Card>
   );
 };
 
-export default VFormWithIcon;
+export default ManageUsers;

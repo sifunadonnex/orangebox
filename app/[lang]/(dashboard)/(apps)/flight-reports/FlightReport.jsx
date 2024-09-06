@@ -37,7 +37,7 @@ function FlightReport({ flights }) {
     );
   }
   return (
-    <div className="overflow-x-auto flex flex-col">
+    <div className="overflow-x-auto gap-4 flex flex-col">
       <Card>
         <CardHeader className="border-none p-6 pt-5 mb-0">
           <CardTitle className="text-lg font-semibold text-default-900 p-0">

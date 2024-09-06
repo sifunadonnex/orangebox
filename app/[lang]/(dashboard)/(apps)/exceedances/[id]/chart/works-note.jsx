@@ -34,6 +34,8 @@ const WorksNote = ({ exceedance }) => {
       const data = JSON.parse(exceedance?.exceedanceValues);
       const start = data[0].time;
       const end = data[data.length - 1].time;
+      // set the last parameter as the event parameter
+      setSelectedParameters(Object.keys(parsedData[0]).slice(-1));
       setCsvTable(parsedData.slice(start, end));
     }
   };

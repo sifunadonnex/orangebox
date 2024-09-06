@@ -10,7 +10,6 @@ import DashboardSelect from "@/components/dasboard-select";
 import { cn } from "@/lib/utils";
 
 const ReportsSnapshot = ({ aircrafts }) => {
-  console.log(aircrafts);
   const flights = aircrafts?.map((item) => item.csv).flat();
   const exceedances = aircrafts?.map((item) => item.Exceedance).flat();
   const events = aircrafts?.map((item) => item.EventLog).flat();
@@ -34,7 +33,7 @@ const getMonthsCount = (data)=>{
   if(exceedances){
     const monthCounts = Array(12).fill(0); // Array to hold counts for each month
     data.forEach((exceedance) => {
-      const month = new Date(exceedance.createdAt).getMonth();
+      const month = new Date(exceedance?.createdAt).getMonth();
       monthCounts[month] += 1;
     });
     return monthCounts;

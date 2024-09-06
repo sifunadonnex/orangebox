@@ -7,7 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@iconify/react";
-import User from "@/public/images/avatar/user.png";
+import avatar from "@/public/images/all-img/user-cover.png"
 import { cn } from "@/lib/utils";
 import { usePathname } from "next/navigation";
 import { Fragment } from "react";
@@ -31,7 +31,7 @@ const Header = ({user}) => {
             <div className="flex items-center gap-4 absolute ltr:left-10 rtl:right-10 -bottom-2 lg:-bottom-8">
               <div>
                 <Image
-                  src={User}
+                  src={user?.image||avatar}
                   alt="user"
                   className="h-20 w-20 lg:w-32 lg:h-32 rounded-full"
                 />
@@ -54,10 +54,6 @@ const Header = ({user}) => {
                 {
                   title: "Overview",
                   link: "/user-profile"
-                },
-                {
-                  title: "Activity",
-                  link: "/user-profile/activity"
                 },
                 {
                   title: "Settings",

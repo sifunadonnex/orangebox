@@ -11,6 +11,7 @@ import {
 } from "@/lib/appex-chart-options";
 
 const FlightEventCount = ({ height = 300, exceedances, flights }) => {
+  console.log("exceedances", exceedances);
   const { theme: config, setTheme: setConfig, isRtl } = useThemeStore();
   const { theme: mode } = useTheme();
 

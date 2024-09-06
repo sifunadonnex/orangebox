@@ -13,7 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePathname } from "next/navigation";
 import AddBlock from "../common/add-block";
-import { getUserByEmail } from "@/action/api-action";
+import { getUserByEmail, getAircraftById } from "@/action/api-action";
 import { useUser } from "@/store";
 
 const PopoverSidebar = ({ user, trans }) => {
@@ -44,14 +44,19 @@ const PopoverSidebar = ({ user, trans }) => {
 
   const getUser = async ()=>{
     const userData = await getUserByEmail(user)
-    //get aircraft id list from user
-    if(userData?.Aircraft){
-      const aircraftIdList = userData?.Aircraft?.map((item)=>item.id)
-      userData.aircraftIdList = aircraftIdList
-    }
-    setUser(userData)
     if (userData?.role === "admin") {
       setIsAdmin(true)
+    }
+    //get aircraft id list from user
+    if(userData?.Aircraft && userData?.role === "gatekeeper"){
+      const aircraftIdList = userData?.Aircraft?.map((item)=>item.id)
+      userData.aircraftIdList = aircraftIdList
+      setUser(userData)
+    }
+    if (userData?.role === "client") {
+      const aircraftIdList = await getAircraftById(userData.gateId)
+      userData.aircraftIdList = aircraftIdList?.map((item)=>item.id)
+      setUser(userData)
     }
   }
 

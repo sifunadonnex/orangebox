@@ -57,11 +57,13 @@ const ProjectGrid = ({ project, onEdit }) => {
               color={
                 project?.eventStatus === "Under Review"
                   ? "warning"
-                  : project?.eventStatus === "completed"
+                  : project?.eventStatus === "Valid"
                   ? "success"
-                  : project?.eventStatus === "in progress"
+                  : project?.eventStatus === "Nuisance"
                   ? "default"
-                  : "info"
+                  : project?.eventStatus === "False"
+                  ? "danger"
+                  : "default"
               }
               variant={mode === "dark" ? "soft" : "soft"}
               className=" capitalize"
@@ -163,7 +165,7 @@ const ProjectGrid = ({ project, onEdit }) => {
               </div>
               {project.flightPhase && (
                 <Badge
-                  color={phaseColorMap[project.flightPhase]}
+                  color={phaseColorMap[project?.flightPhase]}
                   variant={mode === "dark" ? "solid" : "solid"}
                   className=" capitalize"
                 >
@@ -176,10 +178,18 @@ const ProjectGrid = ({ project, onEdit }) => {
         <CardFooter className="flex justify-between border-t  p-4">
           <div>
             <div className="text-xs  text-default-600 mb-[2px]">
-              Exceedance Date:
+              Updated On:
             </div>
             <span className="text-xs font-medium text-default-900">
-              {new Date(project?.createdAt).toLocaleDateString()}
+              {new Date(project?.updatedAt).toLocaleDateString()}
+            </span>
+          </div>
+          <div>
+            <div className="text-xs  text-default-600 mb-[2px]">
+              Aircraft:
+            </div>
+            <span className="text-xs font-medium text-default-900">
+              {project?.aircraft?.serialNumber}
             </span>
           </div>
         </CardFooter>

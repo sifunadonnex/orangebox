@@ -31,15 +31,22 @@ const MobileSidebar = ({ user, collapsed, className }) => {
   };
 
   const getUser = async ()=>{
-    const userData = await getUserByEmail(user)
-    //get aircraft id list from user
-    if(userData?.Aircraft){
-      const aircraftIdList = userData?.Aircraft?.map((item)=>item.id)
-      userData.aircraftIdList = aircraftIdList
-    }
-    setUser(userData)
-    if (userData?.role === "admin") {
-      setIsAdmin(true)
+    if (user) {
+      const userData = await getUserByEmail(user)
+      if (userData?.role === "admin") {
+        setIsAdmin(true)
+      }
+      //get aircraft id list from user
+      if(userData?.Aircraft && userData?.role === "gatekeeper"){
+        const aircraftIdList = userData?.Aircraft?.map((item)=>item.id)
+        userData.aircraftIdList = aircraftIdList
+        setUser(userData)
+      }
+      if (userData?.role === "client") {
+        const aircraftIdList = await getAircraftById(userData.gateId)
+        userData.aircraftIdList = aircraftIdList?.map((item)=>item.id)
+        setUser(userData)
+      }
     }
   }
 
@@ -54,9 +61,6 @@ const MobileSidebar = ({ user, collapsed, className }) => {
 
   React.useEffect(() => {
     getUser()
-  }, [user])
-
-  React.useEffect(() => {
     let subMenuIndex = null;
     let multiMenuIndex = null;
     menus?.map((item, i) => {

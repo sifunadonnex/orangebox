@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import {
   Table,
   TableBody,
@@ -24,15 +24,15 @@ import {
 } from "@/components/ui/alert-dialog";
 import EditingDialog from "./EditingDialog";
 import toast from "react-hot-toast";
-import { deleteEvent, getAircrafts } from '@/action/api-action'
+import { deleteEvent, getAircrafts } from "@/action/api-action";
 import { useQuery } from "@tanstack/react-query";
 import LayoutLoader from "@/components/layout-loader";
-import { Plus, } from "lucide-react";
+import { Plus } from "lucide-react";
 import Blank from "@/components/blank";
 
-const RowEditingDialog = ({events}) => {
-  const { isPending, data:aircrafts } = useQuery({
-    queryKey: ['aircrafts'],
+const RowEditingDialog = ({ events, role }) => {
+  const { isPending, data: aircrafts } = useQuery({
+    queryKey: ["aircrafts"],
     queryFn: async () => await getAircrafts(),
   });
   if (isPending) return <LayoutLoader />;
@@ -45,7 +45,7 @@ const RowEditingDialog = ({events}) => {
     } catch (error) {
       toast.error("Failed to delete Event");
     }
-  }
+  };
   if (events?.length < 1) {
     return (
       <Blank className="max-w-[320px] mx-auto flex flex-col items-center justify-center h-full space-y-3">
@@ -56,14 +56,14 @@ const RowEditingDialog = ({events}) => {
           You have not defined any event yet.
         </div>
         <div></div>
-        <Button onClick={()=>window.location.href='/new-event'}>
+        <Button onClick={() => (window.location.href = "/new-event")}>
           <Plus className="w-4 h-4 text-primary-foreground mr-2" />
           Add Definition
         </Button>
       </Blank>
     );
   }
-  
+
   return (
     <Table>
       <TableHeader>
@@ -72,11 +72,12 @@ const RowEditingDialog = ({events}) => {
           <TableHead> Parameter</TableHead>
           <TableHead>Type</TableHead>
           <TableHead>Phase</TableHead>
-          <TableHead>Action</TableHead>
+          {role === "gatekeeper" ||
+            (role === "admin" && <TableHead>Action</TableHead>)}
         </TableRow>
       </TableHeader>
       <TableBody>
-        {events.map((item) => (
+        {events?.map((item) => (
           <TableRow key={item.id}>
             <TableCell>{item.displayName}</TableCell>
             <TableCell>{item.eventParameter}</TableCell>
@@ -96,45 +97,49 @@ const RowEditingDialog = ({events}) => {
                 {item.flightPhase}
               </Badge>
             </TableCell>
-            <TableCell className="flex justify-end">
-              <div className="flex gap-3">
-                <EditingDialog item={item} aircraftList={aircrafts} />
-                <AlertDialog>
-                  <AlertDialogTrigger asChild>
-                    <Button
-                      size="icon"
-                      variant="outline"
-                      className=" h-7 w-7"
-                      color="secondary"
-                    >
-                      <Icon icon="heroicons:trash" className=" h-4 w-4  " />
-                    </Button>
-                  </AlertDialogTrigger>
-                  <AlertDialogContent>
-                    <AlertDialogHeader>
-                      <AlertDialogTitle>
-                        Are you absolutely sure?
-                      </AlertDialogTitle>
-                      <AlertDialogDescription>
-                        This action cannot be undone. This will permanently
-                        delete your account and remove your data from our
-                        servers.
-                      </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                      <AlertDialogCancel className=" bg-secondary">
-                        Cancel
-                      </AlertDialogCancel>
-                      <AlertDialogAction className="bg-destructive hover:bg-destructive/80"
-                      onClick={() => handleDelete(item.id)}
-                      >
-                        Ok
-                      </AlertDialogAction>
-                    </AlertDialogFooter>
-                  </AlertDialogContent>
-                </AlertDialog>
-              </div>
-            </TableCell>
+            {role === "gatekeeper" ||
+              (role === "admin" && (
+                <TableCell className="flex justify-end">
+                  <div className="flex gap-3">
+                    <EditingDialog item={item} aircraftList={aircrafts} />
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button
+                          size="icon"
+                          variant="outline"
+                          className=" h-7 w-7"
+                          color="secondary"
+                        >
+                          <Icon icon="heroicons:trash" className=" h-4 w-4  " />
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your account and remove your data from our
+                            servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel className=" bg-secondary">
+                            Cancel
+                          </AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-destructive hover:bg-destructive/80"
+                            onClick={() => handleDelete(item.id)}
+                          >
+                            Ok
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </div>
+                </TableCell>
+              ))}
           </TableRow>
         ))}
       </TableBody>
@@ -143,4 +148,3 @@ const RowEditingDialog = ({events}) => {
 };
 
 export default RowEditingDialog;
-

@@ -209,6 +209,11 @@ export const menusConfig = {
           icon: ChartBar,
           href: "/flight-reports",
         },
+        {
+          title: "Severity Reports",
+          icon: ChartBar,
+          href: "/severity-reports",
+        },
       ],
     },
   ],
@@ -405,6 +410,11 @@ export const menusConfig = {
             icon: ChartBar,
             href: "/flight-reports",
           },
+          {
+            title: "Severity Reports",
+            icon: ChartBar,
+            href: "/severity-reports",
+          },
         ],
       },
     ],
@@ -427,10 +437,6 @@ export const menusConfig = {
           },
         ],
       },
-      {
-        isHeader: true,
-        title: "Application",
-      },
       // {
       //   title: "support",
       //   icon: Messages,
@@ -441,27 +447,6 @@ export const menusConfig = {
       //   icon: Calendar,
       //   href: "/calendar",
       // },
-      {
-        title: "Events",
-        icon: Diamond,
-        href: "#",
-        isHide: false,
-        child: [
-          {
-            title: "Event List",
-            href: "/events",
-          },
-          {
-            title: "New Definition",
-            href: "/new-event",
-          },
-        ],
-      },
-      {
-        title: "Exceedances",
-        icon: Error,
-        href: "/exceedances",
-      },
       {
         isHeader:true,
         title:"Administrative",
@@ -500,6 +485,22 @@ export const menusConfig = {
         ],
       },
       {
+        title: "Events",
+        icon: Diamond,
+        href: "#",
+        isHide: false,
+        child: [
+          {
+            title: "Event List",
+            href: "/events",
+          },
+          {
+            title: "New Definition",
+            href: "/new-event",
+          },
+        ],
+      },
+      {
         title: "Flights",
         icon: Flight,
         role:'admin',
@@ -513,6 +514,15 @@ export const menusConfig = {
             href: "/new-flight",
           },
         ],
+      },
+      {
+        isHeader: true,
+        title: "Application",
+      },
+      {
+        title: "Exceedances",
+        icon: Error,
+        href: "/exceedances",
       },
       {
         isHeader: true,
@@ -537,6 +547,11 @@ export const menusConfig = {
             title: "Flight Reports",
             icon: ChartBar,
             href: "/flight-reports",
+          },
+          {
+            title: "Severity Reports",
+            icon: ChartBar,
+            href: "/severity-reports",
           },
         ],
       },
